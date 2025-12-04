@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { render } from '@react-email/render';
-import { AppraisalEmail } from '@/emails/appraisal-email';
+import { AppraisalEmailHtml } from '@/emails/appraisal-email';
 
 export const runtime = 'edge';
 
@@ -40,7 +39,6 @@ export async function POST(request: NextRequest) {
     const data: { [key: string]: any } = {};
     const attachments: { filename: string; content: string }[] = [];
 
-    // Use Promise.all to handle all file conversions concurrently
     const filePromises: Promise<void>[] = [];
 
     for (const [key, value] of formData.entries()) {
@@ -58,10 +56,8 @@ export async function POST(request: NextRequest) {
 
     await Promise.all(filePromises);
 
-    // Render the React Email template to an HTML string
-    const html = render(AppraisalEmail({ data }));
+    const html = AppraisalEmailHtml({ data });
 
-    // Manually construct the payload for the Resend API
     const payload = {
       from: `Trade-In Vision <${fromEmail}>`,
       to: [toEmail],
@@ -70,7 +66,6 @@ export async function POST(request: NextRequest) {
       attachments: attachments,
     };
     
-    // Use fetch to send the email via Resend's API
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
