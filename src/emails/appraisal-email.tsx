@@ -40,7 +40,9 @@ import {
   
   const toTitleCase = (str: string) => {
     if (!str) return '';
-    return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
+    const spaced = str.replace(/([A-Z])/g, ' $1');
+    const cleaned = spaced.replace(/^(photo|Photo)/, '').trim();
+    return cleaned.replace(/^./, (s) => s.toUpperCase());
   };
   
   export function AppraisalEmail({ data }: AppraisalEmailProps) {
@@ -116,13 +118,13 @@ import {
               </Section>
 
               <Section>
-                <SectionTitle>Photos</SectionTitle>
+                <SectionTitle>Required Photos</SectionTitle>
                 <Text className="text-sm text-gray-500">
-                  The following photos are included as attachments with this email.
+                  The following required photos are included as attachments with this email.
                 </Text>
                 <ul className="list-disc list-inside text-sm text-gray-700 pl-4">
                   {photoFields.map((field) => 
-                    data[field] ? <li key={field}>{toTitleCase(field.replace('photo', ''))}</li> : null
+                    data[field] ? <li key={field}>{toTitleCase(field)}</li> : null
                   )}
                 </ul>
               </Section>
@@ -132,7 +134,10 @@ import {
                     <SectionTitle>Damages</SectionTitle>
                      {damagePhotos.map((field, index) =>
                         data[field] && (
-                            <DescriptionRow key={field} label={`Damage ${index + 1}`} value={data[`${field}Description`]} />
+                            <div key={field} className="py-2 border-b border-gray-200">
+                                <Text className="text-sm font-medium text-gray-600 m-0">Damage {index + 1} (Attached)</Text>
+                                <DescriptionRow label="Description" value={data[`${field}Description`]} />
+                            </div>
                         )
                     )}
                 </Section>
@@ -143,7 +148,10 @@ import {
                     <SectionTitle>Additional Features</SectionTitle>
                      {featurePhotos.map((field, index) =>
                         data[field] && (
-                            <DescriptionRow key={field} label={`Feature ${index + 1}`} value={data[`${field}Description`]} />
+                            <div key={field} className="py-2 border-b border-gray-200">
+                                <Text className="text-sm font-medium text-gray-600 m-0">Feature {index + 1} (Attached)</Text>
+                                <DescriptionRow label="Description" value={data[`${field}Description`]} />
+                            </div>
                         )
                     )}
                 </Section>
