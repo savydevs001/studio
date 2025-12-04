@@ -1,3 +1,6 @@
+// This file is no longer used by the application but is kept for future reference.
+// The email sending logic has been temporarily removed to resolve build issues.
+
 interface AppraisalEmailProps {
   data: { [key: string]: any };
 }
