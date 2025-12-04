@@ -27,16 +27,16 @@ export default function VehicleInfoStep() {
       }
       const data = await response.json();
       
-      const getVal = (id: string) => data.Results.find((item: any) => item.VariableId === id)?.Value || '';
+      const getVal = (variable: string) => data.Results.find((item: any) => item.Variable === variable)?.Value || '';
 
-      const make = getVal('26');
-      const model = getVal('28');
-      const year = getVal('29');
+      const make = getVal('Make');
+      const model = getVal('Model');
+      const year = getVal('Model Year');
 
       if (make && model && year) {
         setValue('make', make, { shouldValidate: true });
         setValue('model', model, { shouldValidate: true });
-        setValue('year', parseInt(year), { shouldValidate: true });
+        setValue('year', parseInt(year, 10), { shouldValidate: true });
         toast({
             title: 'VIN Decoded',
             description: 'Vehicle information has been filled out.',
