@@ -59,9 +59,9 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
       <FormField
         control={control}
         name={name}
-        render={({ field: { onChange } }) => ( // Only get onChange from the field
+        render={({ field: { onChange } }) => (
           <FormItem>
-            <Card className={cn("overflow-hidden transition-colors", hasError && 'border-destructive')}>
+            <Card className={cn("overflow-hidden transition-colors rounded-lg", hasError && 'border-destructive')}>
               <CardContent className="p-0">
                 <div className="relative aspect-video w-full">
                   <Image 
@@ -70,13 +70,13 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                     fill 
                     style={{ objectFit: 'cover' }}
                     data-ai-hint={!preview ? imageHint : ''}
-                    className="bg-muted"
+                    className="bg-secondary"
                   />
                   {preview && (
                     <Button 
                         variant="destructive" 
                         size="icon" 
-                        className="absolute top-2 right-2 h-6 w-6 z-10"
+                        className="absolute top-2 right-2 h-7 w-7 z-10"
                         onClick={handleRemoveImage}
                         aria-label="Remove image"
                     >
@@ -86,17 +86,16 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                   <Label 
                     htmlFor={name}
                     className={cn(
-                        'absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 transition-opacity cursor-pointer',
-                        !preview && 'opacity-100 bg-transparent',
-                        'hover:opacity-100'
+                        'absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white opacity-0 transition-opacity cursor-pointer group-hover:opacity-100',
+                        !preview && 'opacity-100 bg-transparent hover:bg-black/50',
                     )}
                   >
-                    <div className="flex flex-col items-center">
+                      <div className="text-center rounded-full bg-white/10 p-4 backdrop-blur-sm">
                         {icon}
-                        <span className="mt-1 text-sm font-semibold">
-                            {preview ? 'Change Photo' : 'Upload Photo'}
+                        <span className="mt-2 text-sm font-semibold">
+                            {preview ? 'Change' : 'Upload'}
                         </span>
-                    </div>
+                      </div>
                   </Label>
                 </div>
                 <FormControl>
@@ -105,7 +104,6 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                     type="file"
                     accept="image/png, image/jpeg, image/webp"
                     className="sr-only"
-                    // Manually call onChange from react-hook-form
                     onChange={(e) => onChange(e.target.files)}
                   />
                 </FormControl>

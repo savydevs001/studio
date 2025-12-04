@@ -41,11 +41,12 @@ export default function VehicleInfoStep() {
         if(trim) setValue('trim', trim, { shouldValidate: true });
         toast({
             title: 'VIN Decoded',
-            description: 'Vehicle information has been filled out.',
+            description: 'Vehicle information has been auto-filled.',
+            variant: 'default',
         });
       } else {
          toast({
-            title: 'Error',
+            title: 'VIN Not Found',
             description: 'Could not decode VIN. Please enter details manually.',
             variant: 'destructive',
         });
@@ -62,26 +63,29 @@ export default function VehicleInfoStep() {
   };
 
   return (
-    <div className="space-y-6">
-      <FormField
-        control={control}
-        name="vin"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>VIN</FormLabel>
-            <div className="flex gap-2">
-              <FormControl>
-                <Input placeholder="Enter your 17-digit VIN" {...field} />
-              </FormControl>
-              <Button type="button" onClick={handleDecodeVin} disabled={isDecoding}>
-                {isDecoding ? 'Decoding...' : 'Decode'}
-              </Button>
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold">Vehicle Information</h2>
+        <FormField
+          control={control}
+          name="vin"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>VIN</FormLabel>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <FormControl>
+                  <Input placeholder="Enter your 17-digit VIN" {...field} />
+                </FormControl>
+                <Button type="button" onClick={handleDecodeVin} disabled={isDecoding} className="w-full sm:w-auto">
+                  {isDecoding ? 'Decoding...' : 'Decode VIN'}
+                </Button>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <FormField
           control={control}
           name="make"
@@ -122,7 +126,7 @@ export default function VehicleInfoStep() {
           )}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <FormField
           control={control}
           name="odometer"
@@ -141,7 +145,7 @@ export default function VehicleInfoStep() {
           name="trim"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Trim Level</FormLabel>
+              <FormLabel>Trim / Edition</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., XLE, Limited, Sport" {...field} />
               </FormControl>

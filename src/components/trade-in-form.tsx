@@ -23,9 +23,9 @@ import ContactInfoStep from './form-steps/contact-info-step';
 import SummaryStep from './form-steps/summary-step';
 
 const steps = [
-  { id: '01', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer', 'trim'] },
-  { id: '02', name: 'Details', fields: ['transmission', 'drivetrain'] },
-  { id: '03', name: 'Condition', fields: [
+  { id: '1', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer', 'trim'] },
+  { id: '2', name: 'Details', fields: ['transmission', 'drivetrain'] },
+  { id: '3', name: 'Condition', fields: [
     'accidentHistory', 'accidentDetails',
     'frameDamage', 'frameDamageDetails',
     'floodDamage', 'floodDamageDetails',
@@ -41,22 +41,8 @@ const steps = [
     'aftermarketModifications', 'aftermarketModificationsDetails',
     'otherIssues', 'otherIssuesDetails',
   ] },
-  { id: '04', name: 'Photos', fields: [
-    'photoOdometer',
-    'photoVin',
-    'photoFrontSeats',
-    'photoInteriorRoof',
-    'photoDriverFrontDoor',
-    'photoDriverApron',
-    'photoPassengerApron',
-    'photoDriverFrontCorner',
-    'photoRearSeatArea',
-    'photoDashboard',
-    'photoPassengerRearCorner',
-    'photoTrunkArea',
-    'photoPassengerQuarterPanel',
-    'photoDriverQuarterPanel',
-    'photoDriverRearWheel',
+  { id: '4', name: 'Photos', fields: [
+    'photoOdometer', 'photoVin', 'photoFrontSeats', 'photoInteriorRoof', 'photoDriverFrontDoor', 'photoDriverApron', 'photoPassengerApron', 'photoDriverFrontCorner', 'photoRearSeatArea', 'photoDashboard', 'photoPassengerRearCorner', 'photoTrunkArea', 'photoPassengerQuarterPanel', 'photoDriverQuarterPanel', 'photoDriverRearWheel',
     'photoDamage1', 'photoDamage1Description',
     'photoDamage2', 'photoDamage2Description',
     'photoDamage3', 'photoDamage3Description',
@@ -64,7 +50,7 @@ const steps = [
     'photoFeature2', 'photoFeature2Description',
     'photoFeature3', 'photoFeature3Description',
   ] },
-  { id: '05', name: 'Contact', fields: ['name', 'email', 'phone'] },
+  { id: '5', name: 'Contact', fields: ['name', 'email', 'phone'] },
 ];
 
 export default function TradeInForm() {
@@ -148,16 +134,25 @@ export default function TradeInForm() {
     const fields = steps[currentStep].fields;
     const output = await form.trigger(fields as FieldName<AppraisalFormValues>[], { shouldFocus: true });
 
-    if (!output) return;
+    if (!output) {
+        toast({
+            title: "Missing Fields",
+            description: "Please fill out all required fields before continuing.",
+            variant: "destructive",
+        });
+        return;
+    };
 
     if (currentStep < steps.length - 1) {
       setCurrentStep((step) => step + 1);
+      window.scrollTo(0, 0);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep((step) => step - 1);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -176,6 +171,7 @@ export default function TradeInForm() {
 
     if (result.success) {
       setCurrentStep(steps.length); // Go to summary step
+      window.scrollTo(0, 0);
     } else {
       toast({
         title: "Submission Failed",
@@ -189,16 +185,17 @@ export default function TradeInForm() {
   const restartForm = () => {
     form.reset();
     setCurrentStep(0);
+    window.scrollTo(0, 0);
   }
 
-  const progress = ((currentStep) / (steps.length - 1)) * 100;
+  const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
 
   return (
-    <Card className="w-full max-w-3xl shadow-2xl">
-      <CardContent className="p-4 sm:p-8">
+    <Card className="w-full max-w-3xl shadow-lg border rounded-xl">
+      <CardContent className="p-4 sm:p-6 md:p-8">
         {currentStep < steps.length && (
-          <div className="mb-8 space-y-4">
-            <div className="mb-8">
+          <div className="mb-8 space-y-6">
+            <div className="flex justify-center py-4">
                 <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
             </div>
             <Progress value={progress} className="h-2" />
@@ -206,13 +203,13 @@ export default function TradeInForm() {
         )}
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(processForm)} className="mt-8 space-y-8">
+          <form onSubmit={form.handleSubmit(processForm)} className="space-y-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                exit={{ opacity: 0, x: -30 }}
                 transition={{ duration: 0.3 }}
               >
                 {currentStep === 0 && <VehicleInfoStep />}
@@ -225,9 +222,9 @@ export default function TradeInForm() {
             </AnimatePresence>
 
             {currentStep < steps.length && (
-              <div className="flex justify-between items-center pt-4 border-t">
-                <Button type="button" variant="ghost" onClick={prevStep} disabled={currentStep === 0}>
-                  Previous
+              <div className="flex justify-between items-center pt-6 border-t">
+                <Button type="button" variant="ghost" onClick={prevStep} disabled={currentStep === 0 || isSubmitting}>
+                  Previous Step
                 </Button>
                 {currentStep === steps.length - 1 ? (
                   <Button type="submit" disabled={isSubmitting}>

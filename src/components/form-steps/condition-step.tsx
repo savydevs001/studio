@@ -53,8 +53,8 @@ const ConditionalDetailsField = ({ watchName, detailsName, detailsLabel, placeho
             control={control}
             name={detailsName}
             render={({ field }) => (
-              <FormItem className="mt-3">
-                <FormLabel>Please provide details about the {detailsLabel}</FormLabel>
+              <FormItem className="mt-4 pt-4 border-t">
+                <FormLabel>Please provide details about the {detailsLabel}:</FormLabel>
                 <FormControl>
                   <Textarea placeholder={placeholder} {...field} />
                 </FormControl>
@@ -77,13 +77,13 @@ const Question = ({ name, label, options, values, detailsName, detailsLabel, pla
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="space-y-3 p-4 border rounded-lg">
+        <FormItem className="space-y-3 p-4 border rounded-lg bg-card">
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={field.value}
-              className="flex flex-wrap gap-x-4 gap-y-2"
+              className="flex flex-wrap gap-x-6 gap-y-2"
             >
               {options.map((option, index) => (
                 <FormItem key={values[index]} className="flex items-center space-x-2 space-y-0">
@@ -104,10 +104,10 @@ const Question = ({ name, label, options, values, detailsName, detailsLabel, pla
 };
 
 const Section = ({ title, questions }: { title: string; questions: any[] }) => (
-    <div>
-        <h3 className="text-lg font-semibold mb-4">{title}</h3>
-        <div className="space-y-6">
-        {questions.map((q) => <Question key={q.name} {...q} options={q.options || ['No', 'Yes']} values={q.values || ['no', 'yes']} />)}
+    <div className="space-y-6">
+        <h3 className="text-xl font-semibold">{title}</h3>
+        <div className="space-y-4">
+          {questions.map((q) => <Question key={q.name} {...q} options={q.options || ['No', 'Yes']} values={q.values || ['no', 'yes']} />)}
         </div>
     </div>
 );
@@ -116,42 +116,46 @@ const Section = ({ title, questions }: { title: string; questions: any[] }) => (
 export default function ConditionStep() {
   const { control } = useFormContext();
   return (
-    <div className="space-y-8">
-      <Section title="History" questions={historyQuestions} />
-      <Section title="Mechanical" questions={mechanicalQuestions} />
-      <Section title="Exterior" questions={exteriorQuestions} />
-      <Section title="Interior" questions={interiorQuestions} />
-      <Section title="Other" questions={otherQuestions} />
-      <FormField
-          control={control}
-          name="keys"
-          render={({ field }) => (
-          <FormItem className="p-4 border rounded-lg">
-              <FormLabel>How many keys do you have?</FormLabel>
-              <FormControl>
-                  <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-wrap gap-x-4 gap-y-2"
-                      >
-                      <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                          <RadioGroupItem value="2+" />
-                          </FormControl>
-                          <FormLabel className="font-normal">2 or more</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                          <RadioGroupItem value="1" />
-                          </FormControl>
-                          <FormLabel className="font-normal">1</FormLabel>
-                      </FormItem>
-                  </RadioGroup>
-              </FormControl>
-              <FormMessage />
-          </FormItem>
-          )}
-      />
+    <div className="space-y-12">
+      <Section title="Vehicle History" questions={historyQuestions} />
+      <Section title="Mechanical Condition" questions={mechanicalQuestions} />
+      <Section title="Exterior Condition" questions={exteriorQuestions} />
+      <Section title="Interior Condition" questions={interiorQuestions} />
+      <Section title="Other Information" questions={otherQuestions} />
+      
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold">Keys</h3>
+        <FormField
+            control={control}
+            name="keys"
+            render={({ field }) => (
+            <FormItem className="p-4 border rounded-lg bg-card">
+                <FormLabel>How many keys do you have for the vehicle?</FormLabel>
+                <FormControl>
+                    <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-wrap gap-x-6 gap-y-2 pt-2"
+                        >
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormControl>
+                            <RadioGroupItem value="1" />
+                            </FormControl>
+                            <FormLabel className="font-normal">1 Key</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                            <FormControl>
+                            <RadioGroupItem value="2+" />
+                            </FormControl>
+                            <FormLabel className="font-normal">2 or more Keys</FormLabel>
+                        </FormItem>
+                    </RadioGroup>
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
+      </div>
     </div>
   );
 }
