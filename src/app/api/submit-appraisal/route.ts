@@ -4,6 +4,9 @@ import { AppraisalEmail } from '@/emails/appraisal-email';
 import bufferFrom from 'buffer-from';
 import React from 'react';
 
+// This configures the route to run on the Edge Runtime, which is required for Cloudflare Pages.
+export const runtime = 'edge';
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 const toEmail = process.env.APPRAISAL_TO_EMAIL;
 const fromEmail = process.env.APPRAISAL_FROM_EMAIL;
