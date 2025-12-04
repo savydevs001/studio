@@ -57,37 +57,37 @@
     {
       "id": "interior-roof",
       "description": "A photo showing the interior roof and headliner.",
-      "imageUrl": "https://images.unsplash.com/photo-1662529066735-428c10023093?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXIlMjByb29mfGVufDB8fHx8MTc2NDg3MDc4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "InteriorRoof-12a34f94.jpg",
       "imageHint": "car roof"
     },
     {
       "id": "driver-front-door",
       "description": "A photo of the inside of the driver's front door.",
-      "imageUrl": "https://images.unsplash.com/photo-1588829274539-f346ce6dbde0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXIlMjBkb29yfGVufDB8fHx8MTc2NDg3MDc4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "DriverFrontDoor-448e0628.jpg",
       "imageHint": "car door"
     },
     {
       "id": "driver-apron",
       "description": "A photo of the driver-side engine bay apron.",
-      "imageUrl": "https://images.unsplash.com/photo-1708063785769-43da3123684d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjYXIlMjBlbmdpbmV8ZW58MHx8fHwxNzY0ODY5MjMzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "DriverApron-e5db0500.jpg",
       "imageHint": "car engine"
     },
     {
       "id": "passenger-apron",
       "description": "A photo of the passenger-side engine bay apron.",
-      "imageUrl": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYXIlMjBlbmdpbmV8ZW58MHx8fHwxNzY0ODY5MjMzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "PassengerApron-855afb0b.jpg",
       "imageHint": "car engine"
     },
     {
       "id": "rear-seat-area",
       "description": "A photo of the rear passenger seating area.",
-      "imageUrl": "https://images.unsplash.com/photo-1621639532859-8b26570b96fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXIlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjQ3NTEyODJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "RearSeatArea-6d71cde6.jpg",
       "imageHint": "car interior"
     },
     {
       "id": "trunk-area",
       "description": "A photo of the inside of the trunk.",
-      "imageUrl": "https://images.unsplash.com/photo-1617776919745-3b30ac157d3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXIlMjB0cnVua3xlbnwwfHx8fDE3NjQ4MTYyMzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "TrunkArea-17b8e4dc.jpg",
       "imageHint": "car trunk"
     }
   ]
