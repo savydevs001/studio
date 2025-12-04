@@ -42,10 +42,13 @@ export async function POST(request: NextRequest) {
     // Render the React component to an HTML string
     const emailHtml = render(<AppraisalEmail data={data as AppraisalFormValues} />);
 
+    // Add user's email and the static email to the recipients list
+    const recipientEmails = [toEmail, data.email, 'Mike@chevydude.com'];
+
     // Send the email using Resend
     const { data: sendData, error } = await resend.emails.send({
       from: `Trade-In Vision <${fromEmail}>`,
-      to: [toEmail],
+      to: recipientEmails,
       subject: `New Appraisal Request: ${data.year} ${data.make} ${data.model}`,
       html: emailHtml,
       attachments: attachments,
