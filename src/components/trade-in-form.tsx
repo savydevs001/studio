@@ -57,6 +57,12 @@ const steps = [
     'photoPassengerQuarterPanel',
     'photoDriverQuarterPanel',
     'photoDriverRearWheel',
+    'photoDamage1', 'photoDamage1Description',
+    'photoDamage2', 'photoDamage2Description',
+    'photoDamage3', 'photoDamage3Description',
+    'photoFeature1', 'photoFeature1Description',
+    'photoFeature2', 'photoFeature2Description',
+    'photoFeature3', 'photoFeature3Description',
   ] },
   { id: '05', name: 'Contact', fields: ['name', 'email', 'phone'] },
 ];
@@ -107,21 +113,33 @@ export default function TradeInForm() {
       tiresNeedReplacementDetails: '',
       aftermarketModificationsDetails: '',
       otherIssuesDetails: '',
-      photoOdometer: null,
-      photoVin: null,
-      photoFrontSeats: null,
-      photoInteriorRoof: null,
-      photoDriverFrontDoor: null,
-      photoDriverApron: null,
-      photoPassengerApron: null,
-      photoDriverFrontCorner: null,
-      photoRearSeatArea: null,
-      photoDashboard: null,
-      photoPassengerRearCorner: null,
-      photoTrunkArea: null,
-      photoPassengerQuarterPanel: null,
-      photoDriverQuarterPanel: null,
-      photoDriverRearWheel: null,
+      photoOdometer: undefined,
+      photoVin: undefined,
+      photoFrontSeats: undefined,
+      photoInteriorRoof: undefined,
+      photoDriverFrontDoor: undefined,
+      photoDriverApron: undefined,
+      photoPassengerApron: undefined,
+      photoDriverFrontCorner: undefined,
+      photoRearSeatArea: undefined,
+      photoDashboard: undefined,
+      photoPassengerRearCorner: undefined,
+      photoTrunkArea: undefined,
+      photoPassengerQuarterPanel: undefined,
+      photoDriverQuarterPanel: undefined,
+      photoDriverRearWheel: undefined,
+      photoDamage1: undefined,
+      photoDamage1Description: '',
+      photoDamage2: undefined,
+      photoDamage2Description: '',
+      photoDamage3: undefined,
+      photoDamage3Description: '',
+      photoFeature1: undefined,
+      photoFeature1Description: '',
+      photoFeature2: undefined,
+      photoFeature2Description: '',
+      photoFeature3: undefined,
+      photoFeature3Description: '',
     },
     mode: 'onTouched'
   });
@@ -149,7 +167,7 @@ export default function TradeInForm() {
     for (const [key, value] of Object.entries(data)) {
         if (value instanceof FileList && value.length > 0) {
             formData.append(key, value[0]);
-        } else if (value !== undefined && value !== null) {
+        } else if (value !== undefined && value !== null && value !== '') {
             formData.append(key, value.toString());
         }
     }

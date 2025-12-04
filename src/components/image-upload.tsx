@@ -41,7 +41,7 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
   }, [files]);
 
   const handleRemoveImage = () => {
-    setValue(name, null, { shouldValidate: true, shouldDirty: true });
+    setValue(name, undefined, { shouldValidate: true, shouldDirty: true });
     setPreview(null);
   };
 
@@ -49,7 +49,7 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
     <FormField
       control={control}
       name={name}
-      render={({ field: { onChange, value, ref, ...rest } }) => (
+      render={({ field: { onChange, ...rest } }) => (
         <FormItem>
           <Card className={cn("overflow-hidden transition-colors", hasError && 'border-destructive')}>
             <CardContent className="p-0">
