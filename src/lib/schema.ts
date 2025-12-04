@@ -25,18 +25,7 @@ export const appraisalSchema = z.object({
   transmission: z.enum(['Automatic', 'Manual'], { required_error: 'This field is required' }),
   drivetrain: z.enum(['Front-Wheel Drive', 'Rear-Wheel Drive', 'All-Wheel Drive', '4-Wheel Drive'], { required_error: 'This field is required' }),
 
-  // Step 3: Photos
-  photoOdometer: requiredImageSchema,
-  photoVin: requiredImageSchema,
-  photoFront: requiredImageSchema,
-  photoBack: requiredImageSchema,
-  photoDriverSide: requiredImageSchema,
-  photoPassengerSide: requiredImageSchema,
-  photoTires: requiredImageSchema,
-  photoFrontSeats: requiredImageSchema,
-  photoDashboard: requiredImageSchema,
-
-  // Step 4: Condition
+  // Step 3: Condition
   // History
   accidentHistory: z.enum(['yes', 'no'], { required_error: 'This field is required' }),
   accidentDetails: z.string().optional(),
@@ -73,6 +62,23 @@ export const appraisalSchema = z.object({
   aftermarketModificationsDetails: z.string().optional(),
   otherIssues: z.enum(['yes', 'no'], { required_error: 'This field is required' }),
   otherIssuesDetails: z.string().optional(),
+  
+  // Step 4: Photos
+  photoOdometer: requiredImageSchema,
+  photoVin: requiredImageSchema,
+  photoFrontSeats: requiredImageSchema,
+  photoInteriorRoof: requiredImageSchema,
+  photoDriverFrontDoor: requiredImageSchema,
+  photoDriverApron: requiredImageSchema,
+  photoPassengerApron: requiredImageSchema,
+  photoDriverFrontCorner: requiredImageSchema,
+  photoRearSeatArea: requiredImageSchema,
+  photoDashboard: requiredImageSchema,
+  photoPassengerRearCorner: requiredImageSchema,
+  photoTrunkArea: requiredImageSchema,
+  photoPassengerQuarterPanel: requiredImageSchema,
+  photoDriverQuarterPanel: requiredImageSchema,
+  photoDriverRearWheel: requiredImageSchema,
 
   // Step 5: Contact Info
   name: z.string().min(2, 'Name is required'),

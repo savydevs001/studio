@@ -18,9 +18,10 @@ interface ImageUploadProps {
   icon: ReactNode;
   exampleImageUrl: string;
   imageHint: string;
+  description?: string;
 }
 
-export default function ImageUpload({ name, label, icon, exampleImageUrl, imageHint }: ImageUploadProps) {
+export default function ImageUpload({ name, label, icon, exampleImageUrl, imageHint, description }: ImageUploadProps) {
   const { control, watch, setValue, formState: { errors } } = useFormContext();
   const [preview, setPreview] = useState<string | null>(null);
   const files = watch(name);
@@ -98,8 +99,9 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                   {...rest}
                 />
               </FormControl>
-               <div className="p-3 bg-card">
+               <div className="p-3 bg-card space-y-1">
                   <p className="text-sm font-medium text-center text-foreground">{label}</p>
+                  {description && <p className="text-xs text-muted-foreground text-center">{description}</p>}
                 </div>
             </CardContent>
           </Card>
