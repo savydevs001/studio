@@ -3,16 +3,15 @@ import { z } from 'zod';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-// Use `any()` for server-side compatibility, and refine on the client.
-const requiredImageSchema = z
-  .any()
-  .refine((files) => files?.length === 1, 'Image is required.')
-  .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+const fileListSchema = z.custom<FileList>((val) => val instanceof FileList, "Expected a FileList");
+
+const requiredImageSchema = fileListSchema
+  .refine((files) => files.length === 1, 'Image is required.')
+  .refine((files) => files[0].size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
   .refine(
-    (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+    (files) => ACCEPTED_IMAGE_TYPES.includes(files[0].type),
     'Only .jpg, .jpeg, .png and .webp formats are supported.'
-  )
-  .transform((files) => files as FileList);
+  );
 
 
 export const appraisalSchema = z.object({
@@ -20,8 +19,8 @@ export const appraisalSchema = z.object({
   vin: z.string().min(11, 'VIN must be 11-17 characters').max(17, 'VIN must be 11-17 characters'),
   make: z.string().min(1, 'Make is required'),
   model: z.string().min(1, 'Model is required'),
-  year: z.string().regex(/^\d{4}$/, 'Enter a valid 4-digit year'),
-  odometer: z.string().min(1, 'Odometer reading is required'),
+  year: z.coerce.number().min(1900, 'Enter a valid year').max(new Date().getFullYear() + 1, 'Enter a valid year'),
+  odometer: z.coerce.number().min(1, 'Odometer reading is required'),
 
   // Step 2: Photos
   photoOdometer: requiredImageSchema,

@@ -11,6 +11,7 @@ import { submitAppraisal } from '@/app/actions';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 
 import { Form } from '@/components/ui/form';
 import FormStepper from '@/components/form-stepper';
@@ -38,8 +39,8 @@ export default function TradeInForm() {
       vin: '',
       make: '',
       model: '',
-      year: '',
-      odometer: '',
+      year: undefined,
+      odometer: undefined,
       hasWarningLights: undefined,
       keys: '',
       acBlowsCold: undefined,
@@ -75,8 +76,8 @@ export default function TradeInForm() {
     for (const [key, value] of Object.entries(data)) {
       if (value instanceof FileList && value.length > 0) {
         formData.append(key, value[0]);
-      } else if (typeof value === 'string') {
-        formData.append(key, value);
+      } else if (typeof value === 'string' || typeof value === 'number') {
+        formData.append(key, value.toString());
       }
     }
 
@@ -99,12 +100,17 @@ export default function TradeInForm() {
     setCurrentStep(0);
   }
 
-  const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
+  const progress = ((currentStep) / (steps.length)) * 100;
 
   return (
     <Card className="w-full max-w-3xl shadow-2xl">
       <CardContent className="p-4 sm:p-8">
-        <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
+        {currentStep < steps.length && (
+          <>
+            <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
+            <Progress value={progress} className="mt-4 h-2" />
+          </>
+        )}
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(processForm)} className="mt-8 space-y-8">
