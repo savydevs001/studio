@@ -1,24 +1,33 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { AppraisalEmail } from '@/emails/appraisal-email';
 import React from 'react';
-import { render } from '@react-email/render';
+import { Resend } from 'resend';
 
-// This configures the route to run on the Edge Runtime.
 export const runtime = 'edge';
 
-const resendApiKey = process.env.RESEND_API_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY);
 const toEmail = process.env.APPRAISAL_TO_EMAIL;
 const fromEmail = process.env.APPRAISAL_FROM_EMAIL;
+
+// Helper function to convert an ArrayBuffer to a Base64 string in an Edge-compatible way
+function arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
+  let binary = '';
+  const bytes = new Uint8Array(arrayBuffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
 
 // Helper function to convert a file to a Base64 string
 async function fileToBase64(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  return buffer.toString('base64');
+  return arrayBufferToBase64(arrayBuffer);
 }
 
 export async function POST(request: NextRequest) {
-  if (!resendApiKey || !toEmail || !fromEmail) {
+  if (!process.env.RESEND_API_KEY || !toEmail || !fromEmail) {
     return NextResponse.json({ 
         message: 'Email configuration is missing. Please contact support.' 
     }, { status: 500 });
@@ -47,30 +56,17 @@ export async function POST(request: NextRequest) {
 
     await Promise.all(filePromises);
 
-    const emailHtml = render(React.createElement(AppraisalEmail, { data }));
-
-    const emailPayload = {
+    const { data: responseData, error } = await resend.emails.send({
       from: `Trade-In Vision <${fromEmail}>`,
       to: [toEmail],
       subject: `New Appraisal Request: ${data.year} ${data.make} ${data.model}`,
-      html: emailHtml,
+      react: <AppraisalEmail data={data} />,
       attachments: attachments,
-    };
-
-    const resendResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailPayload),
     });
 
-    const responseData = await resendResponse.json();
-
-    if (!resendResponse.ok) {
-      console.error('Resend API Error:', responseData);
-      return NextResponse.json({ message: 'Error sending email.', error: responseData.message || 'Unknown error from Resend API' }, { status: 500 });
+    if (error) {
+      console.error('Resend API Error:', error);
+      return NextResponse.json({ message: 'Error sending email.', error: error.message || 'Unknown error from Resend API' }, { status: 500 });
     }
 
     return NextResponse.json({ message: 'Appraisal submitted successfully!', data: responseData });
