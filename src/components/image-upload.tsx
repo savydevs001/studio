@@ -14,7 +14,6 @@ import { FormField, FormItem, FormMessage, FormControl, FormLabel } from '@/comp
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 
-
 interface ImageUploadProps {
   name: string;
   label: string;
@@ -28,22 +27,24 @@ interface ImageUploadProps {
 export default function ImageUpload({ name, label, icon, exampleImageUrl, imageHint, description, descriptionName }: ImageUploadProps) {
   const { control, watch, setValue, formState: { errors } } = useFormContext();
   const [preview, setPreview] = useState<string | null>(null);
-  const files = watch(name);
+  const fileList = watch(name);
   const hasError = !!errors[name] || (descriptionName && !!errors[descriptionName]);
-  const showDescription = descriptionName && files && files.length > 0;
+  const showDescription = descriptionName && fileList && fileList.length > 0;
 
   useEffect(() => {
-    if (files && files.length > 0) {
-      const file = files[0];
+    // This effect creates a preview URL whenever the file list changes.
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
       if (file instanceof File) {
         const newPreview = URL.createObjectURL(file);
         setPreview(newPreview);
+        // Cleanup function to revoke the object URL to avoid memory leaks
         return () => URL.revokeObjectURL(newPreview);
       }
     } else {
       setPreview(null);
     }
-  }, [files]);
+  }, [fileList]);
 
   const handleRemoveImage = () => {
     setValue(name, undefined, { shouldValidate: true, shouldDirty: true });
@@ -54,64 +55,64 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
   };
 
   return (
-     <div className="space-y-2">
+    <div className="space-y-2">
       <FormField
         control={control}
         name={name}
-        render={({ field: { onChange, ...rest } }) => (
+        render={({ field: { onChange } }) => ( // Only get onChange from the field
           <FormItem>
             <Card className={cn("overflow-hidden transition-colors", hasError && 'border-destructive')}>
               <CardContent className="p-0">
-                  <div className="relative aspect-video w-full">
-                    <Image 
-                      src={preview || exampleImageUrl} 
-                      alt={preview ? `${label} preview` : `Example for ${label}`} 
-                      fill 
-                      style={{ objectFit: 'cover' }}
-                      data-ai-hint={!preview ? imageHint : ''}
-                      className="bg-muted"
-                    />
-                    {preview && (
-                      <Button 
-                          variant="destructive" 
-                          size="icon" 
-                          className="absolute top-2 right-2 h-6 w-6 z-10"
-                          onClick={handleRemoveImage}
-                          aria-label="Remove image"
-                      >
-                          <X size={16} />
-                      </Button>
+                <div className="relative aspect-video w-full">
+                  <Image 
+                    src={preview || exampleImageUrl} 
+                    alt={preview ? `${label} preview` : `Example for ${label}`} 
+                    fill 
+                    style={{ objectFit: 'cover' }}
+                    data-ai-hint={!preview ? imageHint : ''}
+                    className="bg-muted"
+                  />
+                  {preview && (
+                    <Button 
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-2 right-2 h-6 w-6 z-10"
+                        onClick={handleRemoveImage}
+                        aria-label="Remove image"
+                    >
+                        <X size={16} />
+                    </Button>
+                  )}
+                  <Label 
+                    htmlFor={name}
+                    className={cn(
+                        'absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 transition-opacity cursor-pointer',
+                        !preview && 'opacity-100 bg-transparent',
+                        'hover:opacity-100'
                     )}
-                    <Label 
-                      htmlFor={name}
-                      className={cn(
-                          'absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 transition-opacity cursor-pointer',
-                          !preview && 'opacity-100 bg-transparent',
-                          'hover:opacity-100'
-                      )}
                   >
-                      <div className="flex flex-col items-center">
-                          {icon}
-                          <span className="mt-1 text-sm font-semibold">
-                              {preview ? 'Change Photo' : 'Upload Photo'}
-                          </span>
-                      </div>
-                    </Label>
-                  </div>
+                    <div className="flex flex-col items-center">
+                        {icon}
+                        <span className="mt-1 text-sm font-semibold">
+                            {preview ? 'Change Photo' : 'Upload Photo'}
+                        </span>
+                    </div>
+                  </Label>
+                </div>
                 <FormControl>
                   <Input
-                    {...rest}
                     id={name}
                     type="file"
                     accept="image/png, image/jpeg, image/webp"
                     className="sr-only"
+                    // Manually call onChange from react-hook-form
                     onChange={(e) => onChange(e.target.files)}
                   />
                 </FormControl>
-                 <div className="p-3 bg-card space-y-1">
-                    <p className="text-sm font-medium text-center text-foreground">{label}</p>
-                    {description && <p className="text-xs text-muted-foreground text-center">{description}</p>}
-                  </div>
+                <div className="p-3 bg-card space-y-1">
+                  <p className="text-sm font-medium text-center text-foreground">{label}</p>
+                  {description && <p className="text-xs text-muted-foreground text-center">{description}</p>}
+                </div>
               </CardContent>
             </Card>
             <FormMessage className="text-center" />
