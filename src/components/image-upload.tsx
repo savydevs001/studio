@@ -49,7 +49,7 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
     <FormField
       control={control}
       name={name}
-      render={({ field: { onChange, value, ...rest } }) => (
+      render={({ field: { onChange, value, ref, ...rest } }) => (
         <FormItem>
           <Card className={cn("overflow-hidden transition-colors", hasError && 'border-destructive')}>
             <CardContent className="p-0">
