@@ -1,7 +1,6 @@
 'use client';
 
 import ImageUpload from '@/components/image-upload';
-import DescribableImageUpload from '@/components/describable-image-upload';
 import { Gauge, Fingerprint, Car, Disc3, Armchair, LayoutDashboard, Aperture, Warehouse, CarTaxiFront, DoorOpen, ShieldAlert, Sparkles } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -72,9 +71,9 @@ export default function PhotosStep() {
           Upload photos of any significant scratches, dents, or other damages. Please add a brief description for each.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <DescribableImageUpload name="photoDamage1" descriptionName="photoDamage1Description" label="Damage 1" icon={<ShieldAlert size={32} />} placeholderImageUrl="/placeholder-damage.png" imageHint="car damage" />
-          <DescribableImageUpload name="photoDamage2" descriptionName="photoDamage2Description" label="Damage 2" icon={<ShieldAlert size={32} />} placeholderImageUrl="/placeholder-damage.png" imageHint="car damage" />
-          <DescribableImageUpload name="photoDamage3" descriptionName="photoDamage3Description" label="Damage 3" icon={<ShieldAlert size={32} />} placeholderImageUrl="/placeholder-damage.png" imageHint="car damage" />
+          <ImageUpload name="photoDamage1" descriptionName="photoDamage1Description" label="Damage 1" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
+          <ImageUpload name="photoDamage2" descriptionName="photoDamage2Description" label="Damage 2" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
+          <ImageUpload name="photoDamage3" descriptionName="photoDamage3Description" label="Damage 3" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
         </div>
       </div>
 
@@ -84,9 +83,9 @@ export default function PhotosStep() {
           Showcase any aftermarket modifications, special features, or upgrades. Please add a brief description for each.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <DescribableImageUpload name="photoFeature1" descriptionName="photoFeature1Description" label="Feature 1" icon={<Sparkles size={32} />} placeholderImageUrl="/placeholder-feature.png" imageHint="car feature" />
-          <DescribableImageUpload name="photoFeature2" descriptionName="photoFeature2Description" label="Feature 2" icon={<Sparkles size={32} />} placeholderImageUrl="/placeholder-feature.png" imageHint="car feature" />
-          <DescribableImageUpload name="photoFeature3" descriptionName="photoFeature3Description" label="Feature 3" icon={<Sparkles size={32} />} placeholderImageUrl="/placeholder-feature.png" imageHint="car feature" />
+          <ImageUpload name="photoFeature1" descriptionName="photoFeature1Description" label="Feature 1" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
+          <ImageUpload name="photoFeature2" descriptionName="photoFeature2Description" label="Feature 2" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
+          <ImageUpload name="photoFeature3" descriptionName="photoFeature3Description" label="Feature 3" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
         </div>
       </div>
     </div>

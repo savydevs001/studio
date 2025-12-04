@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const historyQuestions = [
@@ -104,8 +103,13 @@ const Question = ({ name, label, options, values, detailsName, detailsLabel, pla
   );
 };
 
-const YesNoQuestion = ({ name, label, detailsName, detailsLabel, placeholder }: { name: string; label: string; detailsName?: string, detailsLabel?: string, placeholder?: string }) => (
-  <Question name={name} label={label} options={['No', 'Yes']} values={['no', 'yes']} detailsName={detailsName} detailsLabel={detailsLabel} placeholder={placeholder} />
+const Section = ({ title, questions }: { title: string; questions: any[] }) => (
+    <div>
+        <h3 className="text-lg font-semibold mb-4">{title}</h3>
+        <div className="space-y-6">
+        {questions.map((q) => <Question key={q.name} {...q} options={q.options || ['No', 'Yes']} values={q.values || ['no', 'yes']} />)}
+        </div>
+    </div>
 );
 
 
@@ -113,66 +117,41 @@ export default function ConditionStep() {
   const { control } = useFormContext();
   return (
     <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">History</h3>
-        <div className="space-y-6">
-          {historyQuestions.map((q) => <YesNoQuestion key={q.name} {...q} />)}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Mechanical</h3>
-        <div className="space-y-6">
-          {mechanicalQuestions.map((q) => <YesNoQuestion key={q.name} {...q} />)}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Exterior</h3>
-        <div className="space-y-6">
-          {exteriorQuestions.map((q) => <Question key={q.name} {...q} />)}
-        </div>
-      </div>
-       <div>
-        <h3 className="text-lg font-semibold mb-4">Interior</h3>
-        <div className="space-y-6">
-          {interiorQuestions.map((q) => <Question key={q.name} {...q} />)}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Other</h3>
-        <div className="space-y-6">
-            {otherQuestions.map((q) => <Question key={q.name} {...q} />)}
-            <FormField
-                control={control}
-                name="keys"
-                render={({ field }) => (
-                <FormItem className="p-4 border rounded-lg">
-                    <FormLabel>How many keys do you have?</FormLabel>
-                    <FormControl>
-                        <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex flex-wrap gap-x-4 gap-y-2"
-                            >
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                                <FormControl>
-                                <RadioGroupItem value="2+" />
-                                </FormControl>
-                                <FormLabel className="font-normal">2 or more</FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0">
-                                <FormControl>
-                                <RadioGroupItem value="1" />
-                                </FormControl>
-                                <FormLabel className="font-normal">1</FormLabel>
-                            </FormItem>
-                        </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
-        </div>
-      </div>
+      <Section title="History" questions={historyQuestions} />
+      <Section title="Mechanical" questions={mechanicalQuestions} />
+      <Section title="Exterior" questions={exteriorQuestions} />
+      <Section title="Interior" questions={interiorQuestions} />
+      <Section title="Other" questions={otherQuestions} />
+      <FormField
+          control={control}
+          name="keys"
+          render={({ field }) => (
+          <FormItem className="p-4 border rounded-lg">
+              <FormLabel>How many keys do you have?</FormLabel>
+              <FormControl>
+                  <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-wrap gap-x-4 gap-y-2"
+                      >
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                          <RadioGroupItem value="2+" />
+                          </FormControl>
+                          <FormLabel className="font-normal">2 or more</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                          <RadioGroupItem value="1" />
+                          </FormControl>
+                          <FormLabel className="font-normal">1</FormLabel>
+                      </FormItem>
+                  </RadioGroup>
+              </FormControl>
+              <FormMessage />
+          </FormItem>
+          )}
+      />
     </div>
   );
 }
