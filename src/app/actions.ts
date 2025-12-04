@@ -7,13 +7,20 @@ export async function submitAppraisal(formData: FormData) {
   // For example, upload images to a storage service and send an email.
 
   console.log('--- New Appraisal Submission ---');
-  for (const [key, value] of formData.entries()) {
-    if (value instanceof File) {
-      console.log(`${key}: ${value.name} (${value.size} bytes, ${value.type})`);
-    } else {
-      console.log(`${key}: ${value}`);
+  // Log all text fields
+    for (const [key, value] of formData.entries()) {
+        if (typeof value === 'string') {
+            console.log(`${key}: ${value}`);
+        }
     }
-  }
+    
+    // Log file uploads separately
+    console.log('\n--- File Uploads ---');
+    for (const [key, value] of formData.entries()) {
+        if (value instanceof File) {
+            console.log(`${key}: ${value.name} (${value.size} bytes, ${value.type})`);
+        }
+    }
   console.log('---------------------------------');
 
   // Here you would typically:

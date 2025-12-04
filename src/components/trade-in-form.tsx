@@ -26,7 +26,22 @@ const steps = [
   { id: '01', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer', 'trim'] },
   { id: '02', name: 'Details', fields: ['transmission', 'drivetrain'] },
   { id: '03', name: 'Photos', fields: ['photoOdometer', 'photoVin', 'photoFront', 'photoBack', 'photoDriverSide', 'photoPassengerSide', 'photoTires', 'photoFrontSeats', 'photoDashboard'] },
-  { id: '04', name: 'Condition', fields: ['hasWarningLights', 'keys', 'acBlowsCold', 'hasDrivetrainIssues', 'hasSmokingOdor', 'hasPetOdor'] },
+  { id: '04', name: 'Condition', fields: [
+    'accidentHistory', 'accidentDetails',
+    'frameDamage', 'frameDamageDetails',
+    'floodDamage', 'floodDamageDetails',
+    'smokedIn', 'smokedInDetails',
+    'mechanicalIssues', 'mechanicalIssuesDetails',
+    'odometerBroken', 'odometerBrokenDetails',
+    'paintBodyWork', 'paintBodyWorkDetails',
+    'rustHailDamage', 'rustHailDamageDetails',
+    'interiorBroken', 'interiorBrokenDetails',
+    'interiorRips', 'interiorRipsDetails',
+    'tiresNeedReplacement', 'tiresNeedReplacementDetails',
+    'keys',
+    'aftermarketModifications', 'aftermarketModificationsDetails',
+    'otherIssues', 'otherIssuesDetails',
+  ] },
   { id: '05', name: 'Contact', fields: ['name', 'email', 'phone'] },
 ];
 
@@ -41,21 +56,43 @@ export default function TradeInForm() {
       vin: '',
       make: '',
       model: '',
-      year: '',
-      odometer: '',
+      year: undefined,
+      odometer: undefined,
       trim: '',
       transmission: undefined,
       drivetrain: undefined,
-      hasWarningLights: undefined,
-      keys: '',
-      acBlowsCold: undefined,
-      hasDrivetrainIssues: undefined,
-      hasSmokingOdor: undefined,
-      hasPetOdor: undefined,
       name: '',
       email: '',
       phone: '',
+      accidentHistory: undefined,
+      frameDamage: undefined,
+      floodDamage: undefined,
+      smokedIn: undefined,
+      mechanicalIssues: undefined,
+      odometerBroken: undefined,
+      paintBodyWork: undefined,
+      rustHailDamage: undefined,
+      interiorBroken: undefined,
+      interiorRips: undefined,
+      tiresNeedReplacement: undefined,
+      keys: undefined,
+      aftermarketModifications: undefined,
+      otherIssues: undefined,
+      accidentDetails: '',
+      frameDamageDetails: '',
+      floodDamageDetails: '',
+      smokedInDetails: '',
+      mechanicalIssuesDetails: '',
+      odometerBrokenDetails: '',
+      paintBodyWorkDetails: '',
+      rustHailDamageDetails: '',
+      interiorBrokenDetails: '',
+      interiorRipsDetails: '',
+      tiresNeedReplacementDetails: '',
+      aftermarketModificationsDetails: '',
+      otherIssuesDetails: '',
     },
+    mode: 'onTouched'
   });
 
   const nextStep = async () => {
@@ -79,11 +116,11 @@ export default function TradeInForm() {
     setIsSubmitting(true);
     const formData = new FormData();
     for (const [key, value] of Object.entries(data)) {
-      if (value instanceof FileList && value.length > 0) {
-        formData.append(key, value[0]);
-      } else if (typeof value === 'string' || typeof value === 'number') {
-        formData.append(key, value.toString());
-      }
+        if (value instanceof FileList && value.length > 0) {
+            formData.append(key, value[0]);
+        } else if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+        }
     }
 
     const result = await submitAppraisal(formData);
@@ -93,7 +130,7 @@ export default function TradeInForm() {
     } else {
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your appraisal. Please try again.",
+        description: result.message || "There was an error submitting your appraisal. Please try again.",
         variant: "destructive",
       });
     }
@@ -105,18 +142,16 @@ export default function TradeInForm() {
     setCurrentStep(0);
   }
 
-  const progress = ((currentStep) / (steps.length)) * 100;
+  const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
 
   return (
     <Card className="w-full max-w-3xl shadow-2xl">
       <CardContent className="p-4 sm:p-8">
         {currentStep < steps.length && (
-          <>
-            <div className="mb-8">
-              <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
-            </div>
+          <div className="mb-8 space-y-4">
+            <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
             <Progress value={progress} className="h-2" />
-          </>
+          </div>
         )}
         
         <Form {...form}>
