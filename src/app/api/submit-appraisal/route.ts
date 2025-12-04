@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       from: `Trade-In Vision <${fromEmail}>`,
       to: [toEmail],
       subject: `New Appraisal Request: ${data.year} ${data.make} ${data.model}`,
-      react: <AppraisalEmail data={data} />,
+      react: React.createElement(AppraisalEmail, { data }),
       attachments: attachments,
     });
 
