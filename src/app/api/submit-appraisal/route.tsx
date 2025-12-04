@@ -1,3 +1,4 @@
+// This file should be renamed to route.tsx to support JSX syntax.
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
