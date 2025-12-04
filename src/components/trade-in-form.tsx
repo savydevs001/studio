@@ -99,10 +99,12 @@ export default function TradeInForm() {
     setCurrentStep(0);
   }
 
+  const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
+
   return (
     <Card className="w-full max-w-3xl shadow-2xl">
       <CardContent className="p-4 sm:p-8">
-        <FormStepper steps={steps} currentStep={currentStep} />
+        <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(processForm)} className="mt-8 space-y-8">
