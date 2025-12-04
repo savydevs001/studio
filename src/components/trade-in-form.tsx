@@ -25,8 +25,7 @@ import SummaryStep from './form-steps/summary-step';
 const steps = [
   { id: '01', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer', 'trim'] },
   { id: '02', name: 'Details', fields: ['transmission', 'drivetrain'] },
-  { id: '03', name: 'Photos', fields: ['photoOdometer', 'photoVin', 'photoFront', 'photoBack', 'photoDriverSide', 'photoPassengerSide', 'photoTires', 'photoFrontSeats', 'photoDashboard'] },
-  { id: '04', name: 'Condition', fields: [
+  { id: '03', name: 'Condition', fields: [
     'accidentHistory', 'accidentDetails',
     'frameDamage', 'frameDamageDetails',
     'floodDamage', 'floodDamageDetails',
@@ -42,6 +41,7 @@ const steps = [
     'aftermarketModifications', 'aftermarketModificationsDetails',
     'otherIssues', 'otherIssuesDetails',
   ] },
+  { id: '04', name: 'Photos', fields: ['photoOdometer', 'photoVin', 'photoFront', 'photoBack', 'photoDriverSide', 'photoPassengerSide', 'photoTires', 'photoFrontSeats', 'photoDashboard'] },
   { id: '05', name: 'Contact', fields: ['name', 'email', 'phone'] },
 ];
 
@@ -56,8 +56,8 @@ export default function TradeInForm() {
       vin: '',
       make: '',
       model: '',
-      year: undefined,
-      odometer: undefined,
+      year: '',
+      odometer: '',
       trim: '',
       transmission: undefined,
       drivetrain: undefined,
@@ -142,14 +142,16 @@ export default function TradeInForm() {
     setCurrentStep(0);
   }
 
-  const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
+  const progress = ((currentStep) / (steps.length - 1)) * 100;
 
   return (
     <Card className="w-full max-w-3xl shadow-2xl">
       <CardContent className="p-4 sm:p-8">
         {currentStep < steps.length && (
           <div className="mb-8 space-y-4">
-            <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
+            <div className="mb-8">
+                <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
+            </div>
             <Progress value={progress} className="h-2" />
           </div>
         )}
@@ -166,8 +168,8 @@ export default function TradeInForm() {
               >
                 {currentStep === 0 && <VehicleInfoStep />}
                 {currentStep === 1 && <VehicleDetailsStep />}
-                {currentStep === 2 && <PhotosStep />}
-                {currentStep === 3 && <ConditionStep />}
+                {currentStep === 2 && <ConditionStep />}
+                {currentStep === 3 && <PhotosStep />}
                 {currentStep === 4 && <ContactInfoStep />}
                 {currentStep === steps.length && <SummaryStep onRestart={restartForm} />}
               </motion.div>
