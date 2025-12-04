@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "odometer",
+      "description": "A close-up shot of a car's odometer showing the mileage.",
+      "imageUrl": "https://images.unsplash.com/photo-1549095244-09a0a8749b98?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXIlMjBvZG9tZXRlcnxlbnwwfHx8fDE3NjQ4MTYyMzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car odometer"
+    },
+    {
+      "id": "vin",
+      "description": "A clear photo of the vehicle's VIN sticker, usually found on the driver-side doorjamb.",
+      "imageUrl": "https://images.unsplash.com/photo-1613224553571-fffd66ba12c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx2aW4lMjBzdGlja2VyfGVufDB8fHx8MTc2NDg2OTM3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vin sticker"
+    },
+    {
+      "id": "dashboard",
+      "description": "A photo of the dashboard with the car running to show if any warning lights are on.",
+      "imageUrl": "https://images.unsplash.com/photo-1511697344731-2419473a40c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjYXIlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzY0ODUxMTI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car dashboard"
+    },
+    {
+      "id": "front",
+      "description": "A photo of the entire front of the vehicle.",
+      "imageUrl": "https://images.unsplash.com/photo-1441148345475-03a2e82f9719?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXIlMjBmcm9udHxlbnwwfHx8fDE3NjQ4MTMwMTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car front"
+    },
+    {
+      "id": "back",
+      "description": "A photo of the entire back of the vehicle.",
+      "imageUrl": "https://images.unsplash.com/photo-1599396002939-7e3f7cc12b26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXIlMjBiYWNrfGVufDB8fHx8MTc2NDg2OTM3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car back"
+    },
+    {
+      "id": "driver-side",
+      "description": "A photo of the entire driver's side of the vehicle.",
+      "imageUrl": "https://images.unsplash.com/photo-1708063786743-723430dae8f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjYXIlMjBzaWRlfGVufDB8fHx8MTc2NDg2MDU2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car side"
+    },
+    {
+      "id": "passenger-side",
+      "description": "A photo of the entire passenger's side of the vehicle.",
+      "imageUrl": "https://images.unsplash.com/photo-1692261406823-f8dc992ab699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXIlMjBzaWRlfGVufDB8fHx8MTc2NDg2MDU2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car side"
+    },
+    {
+      "id": "front-seats",
+      "description": "A photo showing the condition of the front seats.",
+      "imageUrl": "https://images.unsplash.com/photo-1629280878139-038999084e23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjYXIlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjQ4NTgwMTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car interior"
+    },
+    {
+      "id": "tires",
+      "description": "A photo showing the tread of one of the tires.",
+      "imageUrl": "https://images.unsplash.com/photo-1584640118745-46bb0ffa05d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYXIlMjB0aXJlfGVufDB8fHx8MTc2NDc2NjA3MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car tire"
+    }
+  ]
 }
