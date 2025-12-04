@@ -3,55 +3,55 @@
     {
       "id": "odometer",
       "description": "A close-up shot of a car's odometer showing the mileage.",
-      "imageUrl": "/odometer.jpg",
+      "imageUrl": "/Odometer-63a8cf6c.jpg",
       "imageHint": "car odometer"
     },
     {
       "id": "vin",
       "description": "A clear photo of the vehicle's VIN sticker, usually found on the driver-side doorjamb.",
-      "imageUrl": "/vin.jpg",
+      "imageUrl": "/download.jpeg",
       "imageHint": "vin sticker"
     },
     {
       "id": "dashboard",
       "description": "A photo of the dashboard with the car running to show if any warning lights are on.",
-      "imageUrl": "/dashboard.jpg",
+      "imageUrl": "/Dashboard-f6132011.jpg",
       "imageHint": "car dashboard"
     },
     {
       "id": "front",
       "description": "A photo of the entire front of the vehicle.",
-      "imageUrl": "/front.jpg",
+      "imageUrl": "/DriverFrontCorner-abe7d91a.jpg",
       "imageHint": "car front"
     },
     {
       "id": "back",
       "description": "A photo of the entire back of the vehicle.",
-      "imageUrl": "/back.jpg",
+      "imageUrl": "/PassengerRearCorner-9bddd7b5.jpg",
       "imageHint": "car back"
     },
     {
       "id": "driver-side",
       "description": "A photo of the entire driver's side of the vehicle.",
-      "imageUrl": "/driver-side.jpg",
+      "imageUrl": "/DriverQuarterPanel-e8963eb0.jpg",
       "imageHint": "car side"
     },
     {
       "id": "passenger-side",
       "description": "A photo of the entire passenger's side of the vehicle.",
-      "imageUrl": "/passenger-side.jpg",
+      "imageUrl": "/PassengerQuarterPanel-346ac7e4.jpg",
       "imageHint": "car side"
     },
     {
       "id": "front-seats",
       "description": "A photo showing the condition of the front seats.",
-      "imageUrl": "/front-seats.jpg",
+      "imageUrl": "/FrontSeatsB-ede4020f.jpg",
       "imageHint": "car interior"
     },
     {
       "id": "tires",
       "description": "A photo showing the tread of one of the tires.",
-      "imageUrl": "/tires.jpg",
+      "imageUrl": "/DriverRearWheel-a97921ff.jpg",
       "imageHint": "car tire"
     }
   ]
