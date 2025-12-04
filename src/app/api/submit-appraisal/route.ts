@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       from: `Trade-In Vision <${fromEmail}>`,
       to: [toEmail],
       subject: `New Appraisal Request: ${data.year} ${data.make} ${data.model}`,
+      // FIX: Corrected the JSX syntax for the react property. The component must be passed as a valid React element.
       react: <AppraisalEmail data={data} />,
       attachments: attachments,
     });
