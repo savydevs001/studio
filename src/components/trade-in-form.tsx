@@ -16,16 +16,18 @@ import { Progress } from '@/components/ui/progress';
 import { Form } from '@/components/ui/form';
 import FormStepper from '@/components/form-stepper';
 import VehicleInfoStep from './form-steps/vehicle-info-step';
+import VehicleDetailsStep from './form-steps/vehicle-details-step';
 import PhotosStep from './form-steps/photos-step';
 import ConditionStep from './form-steps/condition-step';
 import ContactInfoStep from './form-steps/contact-info-step';
 import SummaryStep from './form-steps/summary-step';
 
 const steps = [
-  { id: '01', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer'] },
-  { id: '02', name: 'Photos', fields: ['photoOdometer', 'photoVin', 'photoFront', 'photoBack', 'photoDriverSide', 'photoPassengerSide', 'photoTires', 'photoFrontSeats', 'photoDashboard'] },
-  { id: '03', name: 'Condition', fields: ['hasWarningLights', 'keys', 'acBlowsCold', 'hasDrivetrainIssues', 'hasSmokingOdor', 'hasPetOdor'] },
-  { id: '04', name: 'Contact', fields: ['name', 'email', 'phone'] },
+  { id: '01', name: 'Vehicle', fields: ['vin', 'make', 'model', 'year', 'odometer', 'trim'] },
+  { id: '02', name: 'Details', fields: ['transmission', 'drivetrain'] },
+  { id: '03', name: 'Photos', fields: ['photoOdometer', 'photoVin', 'photoFront', 'photoBack', 'photoDriverSide', 'photoPassengerSide', 'photoTires', 'photoFrontSeats', 'photoDashboard'] },
+  { id: '04', name: 'Condition', fields: ['hasWarningLights', 'keys', 'acBlowsCold', 'hasDrivetrainIssues', 'hasSmokingOdor', 'hasPetOdor'] },
+  { id: '05', name: 'Contact', fields: ['name', 'email', 'phone'] },
 ];
 
 export default function TradeInForm() {
@@ -41,6 +43,9 @@ export default function TradeInForm() {
       model: '',
       year: '',
       odometer: '',
+      trim: '',
+      transmission: undefined,
+      drivetrain: undefined,
       hasWarningLights: undefined,
       keys: '',
       acBlowsCold: undefined,
@@ -125,9 +130,10 @@ export default function TradeInForm() {
                 transition={{ duration: 0.3 }}
               >
                 {currentStep === 0 && <VehicleInfoStep />}
-                {currentStep === 1 && <PhotosStep />}
-                {currentStep === 2 && <ConditionStep />}
-                {currentStep === 3 && <ContactInfoStep />}
+                {currentStep === 1 && <VehicleDetailsStep />}
+                {currentStep === 2 && <PhotosStep />}
+                {currentStep === 3 && <ConditionStep />}
+                {currentStep === 4 && <ContactInfoStep />}
                 {currentStep === steps.length && <SummaryStep onRestart={restartForm} />}
               </motion.div>
             </AnimatePresence>

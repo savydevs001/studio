@@ -1,0 +1,71 @@
+'use client';
+
+import { useFormContext } from 'react-hook-form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+export default function VehicleDetailsStep() {
+  const { control } = useFormContext();
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold">Vehicle Details</h2>
+      <FormField
+        control={control}
+        name="transmission"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Transmission</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select transmission type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="Automatic">Automatic</SelectItem>
+                <SelectItem value="Manual">Manual</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="drivetrain"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Drivetrain</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select drivetrain type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="Front-Wheel Drive">Front-Wheel Drive</SelectItem>
+                <SelectItem value="Rear-Wheel Drive">Rear-Wheel Drive</SelectItem>
+                <SelectItem value="All-Wheel Drive">All-Wheel Drive</SelectItem>
+                <SelectItem value="4-Wheel Drive">4-Wheel Drive</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+}

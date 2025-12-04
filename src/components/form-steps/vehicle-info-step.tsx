@@ -32,11 +32,13 @@ export default function VehicleInfoStep() {
       const make = getVal('Make');
       const model = getVal('Model');
       const year = getVal('Model Year');
+      const trim = getVal('Trim');
 
       if (make && model && year) {
         setValue('make', make, { shouldValidate: true });
         setValue('model', model, { shouldValidate: true });
-        setValue('year', parseInt(year, 10), { shouldValidate: true });
+        setValue('year', year, { shouldValidate: true });
+        if(trim) setValue('trim', trim, { shouldValidate: true });
         toast({
             title: 'VIN Decoded',
             description: 'Vehicle information has been filled out.',
@@ -120,19 +122,34 @@ export default function VehicleInfoStep() {
           )}
         />
       </div>
-      <FormField
-        control={control}
-        name="odometer"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Odometer Reading</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., 45000" type="number" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={control}
+          name="odometer"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Odometer Reading</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., 45000" type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="trim"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Trim Level</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., XLE, Limited, Sport" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </div>
   );
 }
