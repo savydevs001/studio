@@ -75,9 +75,9 @@ export default function PhotosStep() {
             </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ImageUpload name="photoDamage1" descriptionName="photoDamage1Description" label="Damage 1" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
-          <ImageUpload name="photoDamage2" descriptionName="photoDamage2Description" label="Damage 2" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
-          <ImageUpload name="photoDamage3" descriptionName="photoDamage3Description" label="Damage 3" icon={<ShieldAlert size={32} />} exampleImageUrl="/placeholder-damage.png" imageHint="car damage" />
+          <ImageUpload name="photoDamage1" descriptionName="photoDamage1Description" label="Damage 1" icon={<ShieldAlert size={32} />} exampleImageUrl="https://picsum.photos/seed/damage1/400/300" imageHint="car damage" />
+          <ImageUpload name="photoDamage2" descriptionName="photoDamage2Description" label="Damage 2" icon={<ShieldAlert size={32} />} exampleImageUrl="https://picsum.photos/seed/damage2/400/300" imageHint="car damage" />
+          <ImageUpload name="photoDamage3" descriptionName="photoDamage3Description" label="Damage 3" icon={<ShieldAlert size={32} />} exampleImageUrl="https://picsum.photos/seed/damage3/400/300" imageHint="car damage" />
         </div>
       </div>
 
@@ -89,9 +89,9 @@ export default function PhotosStep() {
             </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ImageUpload name="photoFeature1" descriptionName="photoFeature1Description" label="Feature 1" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
-          <ImageUpload name="photoFeature2" descriptionName="photoFeature2Description" label="Feature 2" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
-          <ImageUpload name="photoFeature3" descriptionName="photoFeature3Description" label="Feature 3" icon={<Sparkles size={32} />} exampleImageUrl="/placeholder-feature.png" imageHint="car feature" />
+          <ImageUpload name="photoFeature1" descriptionName="photoFeature1Description" label="Feature 1" icon={<Sparkles size={32} />} exampleImageUrl="https://picsum.photos/seed/feature1/400/300" imageHint="car feature" />
+          <ImageUpload name="photoFeature2" descriptionName="photoFeature2Description" label="Feature 2" icon={<Sparkles size={32} />} exampleImageUrl="https://picsum.photos/seed/feature2/400/300" imageHint="car feature" />
+          <ImageUpload name="photoFeature3" descriptionName="photoFeature3Description" label="Feature 3" icon={<Sparkles size={32} />} exampleImageUrl="https://picsum.photos/seed/feature3/400/300" imageHint="car feature" />
         </div>
       </div>
     </div>
