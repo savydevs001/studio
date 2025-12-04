@@ -39,8 +39,8 @@ export default function TradeInForm() {
       vin: '',
       make: '',
       model: '',
-      year: undefined,
-      odometer: undefined,
+      year: '',
+      odometer: '',
       hasWarningLights: undefined,
       keys: '',
       acBlowsCold: undefined,
@@ -107,8 +107,10 @@ export default function TradeInForm() {
       <CardContent className="p-4 sm:p-8">
         {currentStep < steps.length && (
           <>
-            <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
-            <Progress value={progress} className="mt-4 h-2" />
+            <div className="mb-8">
+              <FormStepper steps={steps} currentStep={currentStep} progress={progress} />
+            </div>
+            <Progress value={progress} className="h-2" />
           </>
         )}
         
