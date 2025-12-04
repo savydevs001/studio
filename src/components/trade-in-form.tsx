@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { appraisalSchema, type AppraisalFormValues } from '@/lib/schema';
-import { submitAppraisal } from '@/app/actions';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -162,24 +161,34 @@ export default function TradeInForm() {
     for (const [key, value] of Object.entries(data)) {
         if (value instanceof FileList && value.length > 0) {
             formData.append(key, value[0]);
-        } else if (value !== undefined && value !== null && value !== '') {
+        } else if (value !== undefined && value !== null && value !== '' && !(value instanceof FileList)) {
             formData.append(key, value.toString());
         }
     }
 
-    const result = await submitAppraisal(formData);
+    try {
+      const response = await fetch('/api/submit-appraisal', {
+        method: 'POST',
+        body: formData,
+      });
 
-    if (result.success) {
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Something went wrong');
+      }
+
       setCurrentStep(steps.length); // Go to summary step
       window.scrollTo(0, 0);
-    } else {
+
+    } catch (error: any) {
       toast({
         title: "Submission Failed",
-        description: result.message || "There was an error submitting your appraisal. Please try again.",
+        description: error.message || "There was an error submitting your appraisal. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
   
   const restartForm = () => {
@@ -191,7 +200,7 @@ export default function TradeInForm() {
   const progress = ((currentStep + 1) / (steps.length + 1)) * 100;
 
   return (
-    <Card className="w-full max-w-3xl shadow-lg border rounded-xl">
+    <Card className="w-full max-w-3xl shadow-lg border rounded-xl my-12">
       <CardContent className="p-4 sm:p-6 md:p-8">
         {currentStep < steps.length && (
           <div className="mb-8 space-y-6">
@@ -222,7 +231,7 @@ export default function TradeInForm() {
             </AnimatePresence>
 
             {currentStep < steps.length && (
-              <div className="flex justify-between items-center pt-6 border-t">
+              <div className="flex justify-between items-center pt-6 border-t mt-8">
                 <Button type="button" variant="ghost" onClick={prevStep} disabled={currentStep === 0 || isSubmitting}>
                   Previous Step
                 </Button>
