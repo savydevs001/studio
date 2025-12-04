@@ -144,4 +144,4 @@ export function AppraisalEmailHtml({ data }: AppraisalEmailProps): string {
   `;
 }
 
-export default AppraisalEmailHtml;
+// No default export to avoid issues with edge/serverless environments
