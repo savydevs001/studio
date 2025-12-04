@@ -54,7 +54,7 @@ export default function DescribableImageUpload({ name, descriptionName, label, i
       <FormField
         control={control}
         name={name}
-        render={({ field: { onChange, ...rest } }) => (
+        render={({ field: { onChange, value, ...rest } }) => (
           <FormItem>
             <Card className={cn("overflow-hidden transition-colors", hasError && 'border-destructive')}>
               <CardContent className="p-0">
