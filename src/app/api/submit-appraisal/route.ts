@@ -6,8 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     
-    // Log that we received the data to confirm the endpoint is working.
-    // In a real application, you would now process this data (e.g., save to a database).
+    // This endpoint now successfully receives the data.
+    // The email sending logic has been temporarily removed to resolve build issues.
     console.log('Appraisal data received successfully. Processing is now complete.');
 
     // You can iterate through the form data to see what was received
