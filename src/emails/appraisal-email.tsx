@@ -7,8 +7,6 @@ import {
     Section,
     Hr,
     Tailwind,
-    Head,
-    Font,
     Preview,
   } from '@react-email/components';
   
@@ -87,18 +85,6 @@ import {
   
     return (
       <Html>
-        <Head>
-            <Font
-                fontFamily="Roboto"
-                fallbackFontFamily="Verdana"
-                webFont={{
-                    url: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxK.woff2',
-                    format: 'woff2',
-                }}
-                fontWeight={400}
-                fontStyle="normal"
-            />
-        </Head>
         <Preview>New Appraisal Request: {vehicleTitle}</Preview>
         <Tailwind>
           <Body className="bg-gray-100 font-sans">
