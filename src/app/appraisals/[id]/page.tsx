@@ -5,6 +5,8 @@ import fs from 'fs/promises';
 import db from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { FileWarning } from 'lucide-react';
 
 type Appraisal = Record<string, any>;
 
@@ -38,7 +40,7 @@ const photoKeys: { key: keyof Appraisal; label: string, descriptionKey?: keyof A
     { key: 'photoFeature3', label: 'Feature 3', descriptionKey: 'photoFeature3Description' },
 ];
 
-function getAppraisal(id: string): { appraisal: Appraisal, photos: Photo[] } | null {
+async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos: Photo[] } | null> {
   try {
     const stmt = db.prepare('SELECT * FROM appraisals WHERE id = ?');
     const appraisal: Appraisal | undefined = stmt.get(id) as Appraisal;
@@ -47,28 +49,21 @@ function getAppraisal(id: string): { appraisal: Appraisal, photos: Photo[] } | n
       return null;
     }
     
-    const uploadDir = `/uploads/${id}/`;
-    const photoList: Photo[] = photoKeys.map(pk => {
-        // Since we don't store image paths in DB, we infer them
-        // This assumes a file exists if a form field for it was sent
-        // A more robust way might be to list files in directory
-        // But for now, we find if the form had *any* value for the photo
-        const photoPath = appraisal[pk.key] ? `${uploadDir}${appraisal[pk.key]}` : undefined;
-        
-        return {
-            label: pk.label,
-            path: photoPath,
-            description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
-        };
-    }).filter((p): p is Photo => !!p.path);
-
     // This is a workaround since we aren't storing file names in the DB
     // We can list the directory to find the actual files.
     const submissionDir = path.join(process.cwd(), 'public', 'uploads', id);
-    const files = fs.readdirSync(submissionDir);
+    let files: string[] = [];
+    try {
+        files = await fs.readdir(submissionDir);
+    } catch (error) {
+        console.warn(`Could not read directory for submission ${id}. It may have been deleted.`);
+    }
+
 
     const photosWithRealPaths: Photo[] = photoKeys.map(pk => {
-      const fileName = files.find(f => f.startsWith(pk.key));
+      // The filename in the form is `photoOdometer-image.jpeg` but `pk.key` is just `photoOdometer`
+      // So we find a file that starts with the key.
+      const fileName = files.find(f => f.startsWith(String(pk.key)));
       return {
         label: pk.label,
         path: fileName ? `/uploads/${id}/${fileName}` : undefined,
@@ -110,11 +105,21 @@ const PhotoCard = ({ photo }: { photo: Photo }) => (
     </Card>
 );
 
-export default function AppraisalPage({ params }: { params: { id: string } }) {
-  const result = getAppraisal(params.id);
+export default async function AppraisalPage({ params }: { params: { id: string } }) {
+  const result = await getAppraisal(params.id);
 
   if (!result) {
-    notFound();
+    return (
+        <main className="container mx-auto p-4 sm:p-8 max-w-6xl">
+             <Alert variant="destructive">
+                <FileWarning className="h-4 w-4" />
+                <AlertTitle>Not Found</AlertTitle>
+                <AlertDescription>
+                    No appraisal submission with the ID "{params.id}" could be found. It may have been deleted or the ID is incorrect.
+                </AlertDescription>
+            </Alert>
+        </main>
+    )
   }
 
   const { appraisal, photos } = result;
@@ -183,8 +188,8 @@ export default function AppraisalPage({ params }: { params: { id: string } }) {
                 <InfoRow label="Interior Parts Broken" value={appraisal.interiorBroken} />
                 {appraisal.interiorBrokenDetails && <InfoRow label="Broken Interior Parts Details" value={appraisal.interiorBrokenDetails} />}
                 <Separator/>
-                <InfoRow label="Interior Rips/Stains" value={appraise.interiorRips} />
-                {appraisal.interiorRipsDetails && <InfoRow label="Interior Damage Details" value={appraise.interiorRipsDetails} />}
+                <InfoRow label="Interior Rips/Stains" value={appraisal.interiorRips} />
+                {appraisal.interiorRipsDetails && <InfoRow label="Interior Damage Details" value={appraisal.interiorRipsDetails} />}
                 <Separator/>
                 <InfoRow label="Tires Need Replacement" value={appraisal.tiresNeedReplacement} />
                 {appraisal.tiresNeedReplacementDetails && <InfoRow label="Tire Details" value={appraisal.tiresNeedReplacementDetails} />}
@@ -206,6 +211,15 @@ export default function AppraisalPage({ params }: { params: { id: string } }) {
                 <PhotoCard key={photo.label} photo={photo} />
               ))}
             </div>
+            {photos.length === 0 && (
+                <Alert variant="default">
+                    <FileWarning className="h-4 w-4" />
+                    <AlertTitle>No Photos Found</AlertTitle>
+                    <AlertDescription>
+                        The photos for this submission could not be found. They may have been deleted from the server.
+                    </AlertDescription>
+                </Alert>
+            )}
           </section>
         </CardContent>
       </Card>

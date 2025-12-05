@@ -9,6 +9,10 @@ import db from '@/lib/db';
 import { AppraisalEmail } from '@/emails/appraisal-email';
 import type { AppraisalFormValues } from '@/lib/schema';
 
+// Increase the body size limit to handle multiple large image uploads
+export const maxDuration = 300; // 5 minutes
+export const dynamic = 'force-dynamic';
+
 // This function now handles saving appraisal data to the database,
 // storing images on the filesystem, and sending an email notification.
 export async function POST(request: NextRequest) {
@@ -39,10 +43,15 @@ export async function POST(request: NextRequest) {
       if (value instanceof File) {
         if (value.size > 0) {
           const fileBuffer = Buffer.from(await value.arrayBuffer());
-          const filePath = path.join(uploadDir, value.name);
+          // Sanitize filename and give it a unique prefix to avoid collisions
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+          const cleanFilename = value.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+          const filename = `${key}-${uniqueSuffix}-${cleanFilename}`;
+          const filePath = path.join(uploadDir, filename);
+
           await fs.writeFile(filePath, fileBuffer);
           // Store the public path for the image
-          imagePaths[key] = `/uploads/${submissionId}/${value.name}`;
+          imagePaths[key] = `/uploads/${submissionId}/${filename}`;
         }
       } else {
         data[key] = value;
@@ -70,7 +79,7 @@ export async function POST(request: NextRequest) {
       />
     );
     
-    const recipientEmails = [toEmail, data.email, 'Mike@chevydude.com'].filter(Boolean);
+    const recipientEmails = [toEmail, data.email].filter(Boolean);
 
     // Send the email using Resend
     const { data: sendData, error } = await resend.emails.send({
@@ -78,7 +87,6 @@ export async function POST(request: NextRequest) {
       to: recipientEmails,
       subject: `Appraisal #${submissionId}: ${data.year} ${data.make} ${data.model}`,
       html: emailHtml,
-      // No attachments needed anymore
     });
 
     if (error) {
