@@ -1,15 +1,15 @@
-// This file should be renamed to route.tsx to support JSX syntax.
 import { NextResponse, type NextRequest } from 'next/server';
-import { Resend } from 'resend';
 import { render } from '@react-email/render';
+import { Resend } from 'resend';
+
 import { AppraisalEmail } from '@/emails/appraisal-email';
 import type { AppraisalFormValues } from '@/lib/schema';
 
-// Increase the body size limit for this route
+// Increase the body size limit for this route to handle large image uploads
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '25mb',
+      sizeLimit: '100mb',
     },
   },
 };
@@ -24,10 +24,13 @@ export async function POST(request: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const fromEmail = process.env.APPRAISAL_FROM_EMAIL;
   const toEmail = process.env.APPRAISAL_TO_EMAIL;
-  
+
   if (!fromEmail || !toEmail || !process.env.RESEND_API_KEY) {
     console.error('Missing environment variables for email sending.');
-    return NextResponse.json({ message: 'Server configuration error.' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Server configuration error.' },
+      { status: 500 }
+    );
   }
 
   try {
@@ -39,9 +42,9 @@ export async function POST(request: NextRequest) {
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
         if (value.size > 0) {
-           const content = await fileToBase64(value);
-           attachments.push({ filename: value.name, content });
-           data[key] = { name: value.name }; // Store file info for the email body
+          const content = await fileToBase64(value);
+          attachments.push({ filename: value.name, content });
+          data[key] = { name: value.name }; // Store file info for the email body
         }
       } else {
         data[key] = value;
@@ -65,11 +68,16 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Resend Error:', error);
-      return NextResponse.json({ message: 'Error sending email.', error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { message: 'Error sending email.', error: error.message },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ message: 'Appraisal submitted successfully!', data: sendData });
-
+    return NextResponse.json({
+      message: 'Appraisal submitted successfully!',
+      data: sendData,
+    });
   } catch (error: any) {
     console.error('Submission Error:', error);
     return NextResponse.json(
