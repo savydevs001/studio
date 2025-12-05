@@ -53,6 +53,8 @@ export async function POST(request: NextRequest) {
           
           // Store the public path for email/display purposes
           data[key] = `/uploads/${submissionId}/${filename}`;
+          // Store the filename in the DB
+          dbData[key] = filename;
         }
       } else {
         data[key] = value;

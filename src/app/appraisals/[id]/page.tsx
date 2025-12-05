@@ -6,8 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FileWarning } from 'lucide-react';
-import fs from 'fs/promises';
-import path from 'path';
 
 type Appraisal = Record<string, any>;
 
@@ -44,13 +42,8 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
       return null;
     }
 
-    // Get a list of all files in the submission's upload directory
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', id);
-    const files = await fs.readdir(uploadDir).catch(() => []); // Gracefully handle if dir doesn't exist
-
     const photos: Photo[] = photoKeys.map(pk => {
-      // Find a file that starts with the key (e.g., 'photoDriverFrontCorner-')
-      const fileName = files.find(f => f.startsWith(`${pk.key}-`));
+      const fileName = appraisal[pk.key]; // Get filename directly from DB
 
       if (fileName) {
         return {

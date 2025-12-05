@@ -6,7 +6,25 @@ const dbPath = path.resolve(process.cwd(), 'appraisals.db');
 
 const db = new Database(dbPath);
 
-// Function to initialize the database and create tables if they don't exist
+const photoColumns = [
+  'photoDriverFrontCorner',
+  'photoDriverQuarterPanel',
+  'photoPassengerQuarterPanel',
+  'photoFrontSeats',
+  'photoRearSeatArea',
+  'photoDashboard',
+  'photoDamage1',
+  'photoDamage2',
+  'photoDamage3',
+  'photoDamage4',
+  'photoFeature1',
+  'photoFeature2',
+  'photoFeature3',
+  'photoFeature4',
+];
+
+
+// Function to initialize the database and create/update tables
 function initDb() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS appraisals (
@@ -49,34 +67,34 @@ function initDb() {
       aftermarketModificationsDetails TEXT,
       otherIssues TEXT,
       otherIssuesDetails TEXT,
-      
-      photoDriverFrontCorner TEXT,
-      photoDriverQuarterPanel TEXT,
-      photoPassengerQuarterPanel TEXT,
-      photoFrontSeats TEXT,
-      photoRearSeatArea TEXT,
-      photoDashboard TEXT,
-
-      photoDamage1 TEXT,
       photoDamage1Description TEXT,
-      photoDamage2 TEXT,
       photoDamage2Description TEXT,
-      photoDamage3 TEXT,
       photoDamage3Description TEXT,
-      photoDamage4 TEXT,
       photoDamage4Description TEXT,
-      photoFeature1 TEXT,
       photoFeature1Description TEXT,
-      photoFeature2 TEXT,
       photoFeature2Description TEXT,
-      photoFeature3 TEXT,
       photoFeature3Description TEXT,
-      photoFeature4 TEXT,
       photoFeature4Description TEXT,
-      
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  // Safely add columns for photo filenames if they don't exist
+  const columns = db.prepare("PRAGMA table_info(appraisals)").all();
+  const columnNames = columns.map((col: any) => col.name);
+
+  for (const col of photoColumns) {
+    if (!columnNames.includes(col)) {
+      try {
+        db.exec(`ALTER TABLE appraisals ADD COLUMN ${col} TEXT`);
+        console.log(`Added column: ${col}`);
+      } catch (e) {
+        // This might happen in a race condition but is generally safe to ignore
+        console.warn(`Could not add column ${col}, it might exist already.`);
+      }
+    }
+  }
+
   console.log('Database initialized.');
 }
 
