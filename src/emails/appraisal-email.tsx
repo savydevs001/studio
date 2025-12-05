@@ -10,24 +10,29 @@ import {
   Section,
   Text,
   Tailwind,
+  Link,
 } from '@react-email/components';
 import type { AppraisalFormValues } from '@/lib/schema';
 
 interface AppraisalEmailProps {
   data: AppraisalFormValues;
+  submissionId: string;
+  imagePaths: Record<string, string>;
 }
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <Heading as="h2" className="text-xl font-semibold mt-8 mb-4 border-b pb-2">
-        {children}
-    </Heading>
+  <Heading as="h2" className="text-xl font-semibold mt-8 mb-4 border-b pb-2">
+    {children}
+  </Heading>
 );
 
 const InfoRow = ({ label, value }: { label:string; value: string | number | React.ReactNode | undefined | null }) => (
-    <div className="flex justify-between py-2 border-b border-gray-200">
-        <Text className="text-sm font-medium text-gray-600 m-0">{label}:</Text>
-        <Text className="text-sm text-gray-800 m-0">{value || 'N/A'}</Text>
-    </div>
+  <div className="flex justify-between py-2 border-b border-gray-200">
+    <Text className="text-sm font-medium text-gray-600 m-0">{label}:</Text>
+    <Text className="text-sm text-gray-800 m-0 text-right">{value || 'N/A'}</Text>
+  </div>
 );
 
 const DetailSection = ({ watchName, detailsName, label, data }: { watchName: keyof AppraisalFormValues, detailsName: keyof AppraisalFormValues, label: string, data: AppraisalFormValues }) => {
@@ -44,22 +49,34 @@ const DetailSection = ({ watchName, detailsName, label, data }: { watchName: key
     );
 };
 
+export const AppraisalEmail = ({ data, submissionId, imagePaths }: AppraisalEmailProps) => {
+  const submissionUrl = `${baseUrl}/appraisals/${submissionId}`;
 
-export const AppraisalEmail = ({ data }: AppraisalEmailProps) => (
-  <Html>
-    <Head />
-    <Preview>New Vehicle Appraisal Request: {data.year} {data.make} {data.model}</Preview>
-    <Tailwind>
+  return (
+    <Html>
+      <Head />
+      <Preview>New Appraisal Request #{submissionId}: {data.year} {data.make} {data.model}</Preview>
+      <Tailwind>
         <Body className="bg-gray-50 font-sans p-4">
-            <Container className="bg-white p-8 rounded-lg shadow-sm max-w-2xl mx-auto">
+          <Container className="bg-white p-8 rounded-lg shadow-sm max-w-2xl mx-auto">
             <Section className="text-center">
-                <Heading as="h1" className="text-2xl font-bold text-gray-800 mt-4">
-                    New Appraisal Request
-                </Heading>
+              <Heading as="h1" className="text-2xl font-bold text-gray-800 mt-4">
+                New Appraisal Request
+              </Heading>
+              <Text className="text-base text-gray-600">Submission ID: {submissionId}</Text>
+            </Section>
+
+            <Section className="text-center mt-6 mb-8">
+              <Link
+                href={submissionUrl}
+                className="bg-blue-600 text-white font-bold py-3 px-6 rounded-md"
+              >
+                View Full Submission
+              </Link>
             </Section>
 
             <Text className="text-base">
-                A new vehicle appraisal request has been submitted. See the details below.
+              A new vehicle appraisal request has been submitted. See the summary below.
             </Text>
 
             <SectionTitle>Contact Information</SectionTitle>
@@ -73,13 +90,13 @@ export const AppraisalEmail = ({ data }: AppraisalEmailProps) => (
             <InfoRow label="Model" value={data.model} />
             <InfoRow label="Trim" value={data.trim} />
             <InfoRow label="VIN" value={data.vin} />
-            <InfoRow label="Odometer" value={data.odometer ? data.odometer.toLocaleString() : 'N/A'} />
+            <InfoRow label="Odometer" value={data.odometer ? Number(data.odometer).toLocaleString() : 'N/A'} />
 
             <SectionTitle>Vehicle Details</SectionTitle>
             <InfoRow label="Transmission" value={data.transmission} />
             <InfoRow label="Drivetrain" value={data.drivetrain} />
 
-            <SectionTitle>Condition Report</SectionTitle>
+            <SectionTitle>Condition Report Summary</SectionTitle>
             <InfoRow label="Accident History" value={data.accidentHistory} />
             <DetailSection watchName="accidentHistory" detailsName="accidentDetails" label="Accident" data={data} />
             
@@ -95,42 +112,17 @@ export const AppraisalEmail = ({ data }: AppraisalEmailProps) => (
             <InfoRow label="Mechanical Issues / Warning Lights" value={data.mechanicalIssues} />
             <DetailSection watchName="mechanicalIssues" detailsName="mechanicalIssuesDetails" label="Mechanical Issues" data={data} />
             
-            <InfoRow label="Odometer Broken/Replaced" value={data.odometerBroken} />
-            <DetailSection watchName="odometerBroken" detailsName="odometerBrokenDetails" label="Odometer Issue" data={data} />
-
-            <InfoRow label="Panels Needing Paint/Body Work" value={data.paintBodyWork} />
-            <DetailSection watchName="paintBodyWork" detailsName="paintBodyWorkDetails" label="Paint/Body Work" data={data} />
-
-            <InfoRow label="Major Rust / Hail Damage" value={data.rustHailDamage} />
-            <DetailSection watchName="rustHailDamage" detailsName="rustHailDamageDetails" label="Rust/Hail Damage" data={data} />
-            
-            <InfoRow label="Broken Interior Parts" value={data.interiorBroken} />
-            <DetailSection watchName="interiorBroken" detailsName="interiorBrokenDetails" label="Broken Interior Parts" data={data} />
-            
-            <InfoRow label="Interior Rips, Tears, or Stains" value={data.interiorRips} />
-            <DetailSection watchName="interiorRips" detailsName="interiorRipsDetails" label="Interior Damage" data={data} />
-
-            <InfoRow label="Tires Needing Replacement" value={data.tiresNeedReplacement} />
-            <DetailSection watchName="tiresNeedReplacement" detailsName="tiresNeedReplacementDetails" label="Tire Details" data={data} />
-
-            <InfoRow label="Number of Keys" value={data.keys} />
-
-            <InfoRow label="Aftermarket Modifications" value={data.aftermarketModifications} />
-            <DetailSection watchName="aftermarketModifications" detailsName="aftermarketModificationsDetails" label="Modifications" data={data} />
-
-            <InfoRow label="Other Issues" value={data.otherIssues} />
-            <DetailSection watchName="otherIssues" detailsName="otherIssuesDetails" label="Other Issues" data={data} />
-            
             <Hr className="my-8" />
             <Text className="text-xs text-gray-500 text-center">
-                This email was generated from an automated appraisal request system.
-                <br />
-                Attachments contain photos submitted by the user.
+              This email is a notification for appraisal submission #{submissionId}.
+              <br />
+              All photos and full details are available at the link above.
             </Text>
-            </Container>
+          </Container>
         </Body>
-    </Tailwind>
-  </Html>
-);
+      </Tailwind>
+    </Html>
+  )
+};
 
 export default AppraisalEmail;

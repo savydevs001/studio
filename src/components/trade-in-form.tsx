@@ -55,6 +55,7 @@ const steps = [
 export default function TradeInForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<AppraisalFormValues>({
@@ -172,11 +173,13 @@ export default function TradeInForm() {
         body: formData,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Something went wrong');
-      }
+      const result = await response.json();
 
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong');
+      }
+      
+      setSubmissionId(result.submissionId);
       setCurrentStep(steps.length); // Go to summary step
       window.scrollTo(0, 0);
 
@@ -193,6 +196,7 @@ export default function TradeInForm() {
   
   const restartForm = () => {
     form.reset();
+    setSubmissionId(null);
     setCurrentStep(0);
     window.scrollTo(0, 0);
   }
@@ -226,7 +230,7 @@ export default function TradeInForm() {
                 {currentStep === 2 && <ConditionStep />}
                 {currentStep === 3 && <PhotosStep />}
                 {currentStep === 4 && <ContactInfoStep />}
-                {currentStep === steps.length && <SummaryStep onRestart={restartForm} />}
+                {currentStep === steps.length && <SummaryStep onRestart={restartForm} submissionId={submissionId} />}
               </motion.div>
             </AnimatePresence>
 
