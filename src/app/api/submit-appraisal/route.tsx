@@ -1,3 +1,4 @@
+
 import { NextResponse, type NextRequest } from 'next/server';
 import { render } from '@react-email/render';
 import { Resend } from 'resend';
@@ -13,8 +14,6 @@ import type { AppraisalFormValues } from '@/lib/schema';
 export const maxDuration = 300; // 5 minutes
 export const dynamic = 'force-dynamic';
 
-// This function now handles saving appraisal data to the database,
-// storing images on the filesystem, and sending an email notification.
 export async function POST(request: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const fromEmail = process.env.APPRAISAL_FROM_EMAIL;
@@ -32,6 +31,7 @@ export async function POST(request: NextRequest) {
     const submissionId = crypto.randomBytes(8).toString('hex');
     
     const data: Record<string, any> = { id: submissionId };
+    const dbData: Record<string, any> = { id: submissionId };
 
     // Create a directory for this submission's uploads
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', submissionId);
@@ -45,22 +45,21 @@ export async function POST(request: NextRequest) {
           // Sanitize filename and give it a unique prefix to avoid collisions
           const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
           const cleanFilename = value.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
+          // Use the input field name as a predictable prefix
           const filename = `${key}-${uniqueSuffix}-${cleanFilename}`;
           const filePath = path.join(uploadDir, filename);
 
           await fs.writeFile(filePath, fileBuffer);
           
-          // Store the filename in our data object for the database
-          data[key] = filename;
+          // Store the public path for email/display purposes
+          data[key] = `/uploads/${submissionId}/${filename}`;
         }
       } else {
         data[key] = value;
+        dbData[key] = value;
       }
     }
     
-    // Prepare data for the database
-    const dbData = { ...data };
-
     // Prepare SQL statement for insertion
     const columns = Object.keys(dbData).join(', ');
     const placeholders = Object.keys(dbData).map(() => '?').join(', ');
@@ -94,8 +93,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Submission Error:', error);
-    // Even if email fails, the submission was saved, so we can consider it a partial success
-    // But it's better to inform the user something went wrong.
     return NextResponse.json(
       {
         message: 'An unexpected error occurred during submission.',

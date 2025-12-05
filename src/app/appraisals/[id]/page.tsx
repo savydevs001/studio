@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import db from '@/lib/db';
@@ -5,17 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { FileWarning } from 'lucide-react';
+import fs from 'fs/promises';
+import path from 'path';
 
 type Appraisal = Record<string, any>;
 
 interface Photo {
   label: string;
-  path?: string;
+  path: string;
   description?: string;
 }
 
-// These keys now match the database columns for photo filenames
-const photoKeys: { key: keyof Appraisal; label: string, descriptionKey?: keyof Appraisal }[] = [
+// These keys now match the input names in the form
+const photoKeys: { key: string; label: string, descriptionKey?: string }[] = [
     { key: 'photoDriverFrontCorner', label: 'Front of Vehicle' },
     { key: 'photoDriverQuarterPanel', label: 'Driver Side' },
     { key: 'photoPassengerQuarterPanel', label: 'Passenger Side' },
@@ -41,21 +44,28 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
       return null;
     }
 
-    // Now, we construct photo paths directly from the database record
-    const photosWithRealPaths: Photo[] = photoKeys.map(pk => {
-      const fileName = appraisal[pk.key]; // Get filename from DB
-      return {
-        label: pk.label,
-        // Only create a path if a filename exists for that key
-        path: fileName ? `/uploads/${id}/${fileName}` : undefined,
-        description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
+    // Get a list of all files in the submission's upload directory
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', id);
+    const files = await fs.readdir(uploadDir).catch(() => []); // Gracefully handle if dir doesn't exist
+
+    const photos: Photo[] = photoKeys.map(pk => {
+      // Find a file that starts with the key (e.g., 'photoDriverFrontCorner-')
+      const fileName = files.find(f => f.startsWith(`${pk.key}-`));
+
+      if (fileName) {
+        return {
+          label: pk.label,
+          path: `/uploads/${id}/${fileName}`,
+          description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
+        };
       }
-    }).filter((p): p is Photo => !!p.path); // Filter out entries that don't have a path
+      return null; // Return null if no file is found for this key
+    }).filter((p): p is Photo => p !== null); // Filter out the null entries
 
 
-    return { appraisal, photos: photosWithRealPaths };
+    return { appraisal, photos };
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('Database/File System error:', error);
     return null;
   }
 }
@@ -74,7 +84,7 @@ const PhotoCard = ({ photo }: { photo: Photo }) => (
     <Card className="overflow-hidden">
       <CardContent className="p-0">
         <div className="relative aspect-video w-full bg-secondary">
-          <Image src={photo.path!} alt={photo.label} fill style={{ objectFit: 'cover' }} />
+          <Image src={photo.path} alt={photo.label} fill style={{ objectFit: 'cover' }} />
         </div>
       </CardContent>
       <div className="p-4">
@@ -190,7 +200,7 @@ export default async function AppraisalPage({ params }: { params: { id: string }
             {photos.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {photos.map(photo => (
-                  <PhotoCard key={photo.label} photo={photo} />
+                  <PhotoCard key={photo.path} photo={photo} />
                 ))}
               </div>
             ) : (
