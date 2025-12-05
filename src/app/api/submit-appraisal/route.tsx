@@ -5,6 +5,15 @@ import { render } from '@react-email/render';
 import { AppraisalEmail } from '@/emails/appraisal-email';
 import type { AppraisalFormValues } from '@/lib/schema';
 
+// Increase the body size limit for this route
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '25mb',
+    },
+  },
+};
+
 // Helper to convert a file to a Base64 string for email attachments
 async function fileToBase64(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -43,7 +52,7 @@ export async function POST(request: NextRequest) {
     const emailHtml = render(<AppraisalEmail data={data as AppraisalFormValues} />);
 
     // Add user's email and the static email to the recipients list
-    const recipientEmails = [toEmail, data.email, 'Mike@chevydude.com'];
+    const recipientEmails = [toEmail, data.email, 'Mike@chevydude.com'].filter(Boolean);
 
     // Send the email using Resend
     const { data: sendData, error } = await resend.emails.send({
