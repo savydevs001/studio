@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     const submissionId = crypto.randomBytes(8).toString('hex');
     
     const data: Record<string, any> = { id: submissionId };
-    const imagePaths: Record<string, string> = {};
 
     // Create a directory for this submission's uploads
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', submissionId);
@@ -50,15 +49,14 @@ export async function POST(request: NextRequest) {
           const filePath = path.join(uploadDir, filename);
 
           await fs.writeFile(filePath, fileBuffer);
-          // Store the public path for the image
-          imagePaths[key] = `/uploads/${submissionId}/${filename}`;
+          // We don't need to store the path in memory anymore
         }
       } else {
         data[key] = value;
       }
     }
     
-    // Prepare data for the database, excluding fields we don't want to store directly
+    // Prepare data for the database
     const dbData = { ...data };
 
     // Prepare SQL statement for insertion
@@ -70,33 +68,23 @@ export async function POST(request: NextRequest) {
     stmt.run(...Object.values(dbData));
 
     // Render the React component to an HTML string
-    // Pass submissionId and imagePaths to the email template
     const emailHtml = render(
       <AppraisalEmail 
         data={data as AppraisalFormValues} 
-        submissionId={submissionId} 
-        imagePaths={imagePaths} 
+        submissionId={submissionId}
       />
     );
     
+    // Also send a copy to the person who submitted it
     const recipientEmails = [toEmail, data.email].filter(Boolean);
 
     // Send the email using Resend
-    const { data: sendData, error } = await resend.emails.send({
+    await resend.emails.send({
       from: `Trade-In Vision <${fromEmail}>`,
       to: recipientEmails,
-      subject: `Appraisal #${submissionId}: ${data.year} ${data.make} ${data.model}`,
+      subject: `New Appraisal Submission: #${submissionId}`,
       html: emailHtml,
     });
-
-    if (error) {
-      console.error('Resend Error:', error);
-      // We still return a success response to the user since the data was saved
-      return NextResponse.json({
-        message: 'Appraisal submitted successfully!',
-        submissionId: submissionId,
-      });
-    }
 
     return NextResponse.json({
       message: 'Appraisal submitted successfully!',
@@ -104,9 +92,11 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Submission Error:', error);
+    // Even if email fails, the submission was saved, so we can consider it a partial success
+    // But it's better to inform the user something went wrong.
     return NextResponse.json(
       {
-        message: 'An unexpected error occurred.',
+        message: 'An unexpected error occurred during submission.',
         error: error.message || String(error),
       },
       { status: 500 }
