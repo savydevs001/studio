@@ -49,6 +49,16 @@ function initDb() {
       aftermarketModificationsDetails TEXT,
       otherIssues TEXT,
       otherIssuesDetails TEXT,
+      
+      photoDamage1Description TEXT,
+      photoDamage2Description TEXT,
+      photoDamage3Description TEXT,
+      photoDamage4Description TEXT,
+      photoFeature1Description TEXT,
+      photoFeature2Description TEXT,
+      photoFeature3Description TEXT,
+      photoFeature4Description TEXT,
+      
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);

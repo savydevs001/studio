@@ -12,6 +12,15 @@ const requiredImageSchema = fileListSchema
     'Only .jpg, .jpeg, .png and .webp formats are supported.'
   );
 
+const optionalImageSchema = fileListSchema
+  .optional()
+  .refine((files) => !files || files.length === 0 || files[0].size <= 5 * 1024 * 1024, `Max file size is 5MB.`)
+  .refine(
+    (files) => !files || files.length === 0 || ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(files[0].type),
+    'Only .jpg, .jpeg, .png and .webp formats are supported.'
+  );
+
+
 export const appraisalSchema = z.object({
   // Step 1: Vehicle Info
   vin: z.string().min(11, 'VIN must be 11-17 characters').max(17, 'VIN must be 11-17 characters'),
@@ -70,6 +79,25 @@ export const appraisalSchema = z.object({
   photoFrontSeats: requiredImageSchema,
   photoRearSeatArea: requiredImageSchema,
   photoDashboard: requiredImageSchema,
+
+  // Optional Photos
+  photoDamage1: optionalImageSchema,
+  photoDamage1Description: z.string().optional(),
+  photoDamage2: optionalImageSchema,
+  photoDamage2Description: z.string().optional(),
+  photoDamage3: optionalImageSchema,
+  photoDamage3Description: z.string().optional(),
+  photoDamage4: optionalImageSchema,
+  photoDamage4Description: z.string().optional(),
+  photoFeature1: optionalImageSchema,
+  photoFeature1Description: z.string().optional(),
+  photoFeature2: optionalImageSchema,
+  photoFeature2Description: z.string().optional(),
+  photoFeature3: optionalImageSchema,
+  photoFeature3Description: z.string().optional(),
+  photoFeature4: optionalImageSchema,
+  photoFeature4Description: z.string().optional(),
+
 
   // Step 5: Contact Info
   name: z.string().min(2, 'Name is required'),

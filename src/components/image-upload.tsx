@@ -18,8 +18,8 @@ interface ImageUploadProps {
   name: string;
   label: string;
   icon: ReactNode;
-  exampleImageUrl: string;
-  imageHint: string;
+  exampleImageUrl?: string;
+  imageHint?: string;
   description?: string;
   descriptionName?: string;
 }
@@ -54,6 +54,9 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
     setPreview(null);
   };
 
+  const hasImage = !!preview;
+  const hasPlaceholder = !!exampleImageUrl;
+
   return (
     <div className="space-y-2">
       <FormField
@@ -63,16 +66,18 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
           <FormItem>
             <Card className={cn("overflow-hidden transition-colors rounded-lg", hasError && 'border-destructive')}>
               <CardContent className="p-0">
-                <div className="relative aspect-video w-full">
-                  <Image 
-                    src={preview || exampleImageUrl} 
-                    alt={preview ? `${label} preview` : `Example for ${label}`} 
-                    fill 
-                    style={{ objectFit: 'cover' }}
-                    data-ai-hint={!preview ? imageHint : ''}
-                    className="bg-secondary"
-                  />
-                  {preview && (
+                <div className="relative aspect-video w-full bg-secondary">
+                  { (hasImage || hasPlaceholder) && (
+                    <Image 
+                      src={preview || exampleImageUrl!} 
+                      alt={preview ? `${label} preview` : `Example for ${label}`} 
+                      fill 
+                      style={{ objectFit: 'cover' }}
+                      data-ai-hint={!preview ? imageHint : ''}
+                      className="bg-secondary"
+                    />
+                  )}
+                  {hasImage && (
                     <Button 
                         variant="destructive" 
                         size="icon" 
@@ -87,13 +92,13 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                     htmlFor={name}
                     className={cn(
                         'absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white opacity-0 transition-opacity cursor-pointer group-hover:opacity-100',
-                        !preview && 'opacity-100 bg-transparent hover:bg-black/50',
+                        !hasImage && 'opacity-100 bg-transparent hover:bg-black/50',
                     )}
                   >
-                      <div className="text-center rounded-full bg-white/10 p-4 backdrop-blur-sm">
+                      <div className={cn("text-center rounded-full p-4", !hasImage && "bg-background/80 text-foreground backdrop-blur-sm")}>
                         {icon}
                         <span className="mt-2 text-sm font-semibold">
-                            {preview ? 'Change' : 'Upload'}
+                            {hasImage ? 'Change' : 'Upload'}
                         </span>
                       </div>
                   </Label>
@@ -105,7 +110,14 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                     accept="image/png, image/jpeg, image/webp"
                     capture="environment"
                     className="sr-only"
-                    onChange={(e) => onChange(e.target.files)}
+                    onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                            onChange(e.target.files);
+                        } else {
+                            // Handle case where user cancels file selection
+                            onChange(undefined);
+                        }
+                    }}
                   />
                 </FormControl>
                 <div className="p-3 bg-card space-y-1">

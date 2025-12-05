@@ -23,6 +23,14 @@ const photoKeys: { key: keyof Appraisal; label: string, descriptionKey?: keyof A
     { key: 'photoFrontSeats', label: 'Front Seats' },
     { key: 'photoRearSeatArea', label: 'Rear Seats' },
     { key: 'photoDashboard', label: 'Dashboard' },
+    { key: 'photoDamage1', label: 'Damage Area 1', descriptionKey: 'photoDamage1Description' },
+    { key: 'photoDamage2', label: 'Damage Area 2', descriptionKey: 'photoDamage2Description' },
+    { key: 'photoDamage3', label: 'Damage Area 3', descriptionKey: 'photoDamage3Description' },
+    { key: 'photoDamage4', label: 'Damage Area 4', descriptionKey: 'photoDamage4Description' },
+    { key: 'photoFeature1', label: 'Special Feature 1', descriptionKey: 'photoFeature1Description' },
+    { key: 'photoFeature2', label: 'Special Feature 2', descriptionKey: 'photoFeature2Description' },
+    { key: 'photoFeature3', label: 'Special Feature 3', descriptionKey: 'photoFeature3Description' },
+    { key: 'photoFeature4', label: 'Special Feature 4', descriptionKey: 'photoFeature4Description' },
 ];
 
 async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos: Photo[] } | null> {
