@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import db from '@/lib/db';
 import {
   Table,
@@ -24,6 +25,7 @@ type Appraisal = {
 };
 
 function getAppraisals(): Appraisal[] {
+  noStore(); // Opts out of caching for this function
   try {
     const stmt = db.prepare('SELECT id, createdAt, year, make, model, name, email FROM appraisals ORDER BY createdAt DESC');
     const appraisals = stmt.all() as Appraisal[];
