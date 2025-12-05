@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -19,17 +18,13 @@ interface AppraisalEmailProps {
   data: AppraisalFormValues;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:9002';
-
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <Heading as="h2" className="text-xl font-semibold mt-8 mb-4 border-b pb-2">
         {children}
     </Heading>
 );
 
-const InfoRow = ({ label, value }: { label: string; value: string | number | undefined | null }) => (
+const InfoRow = ({ label, value }: { label: string; value: string | number | React.ReactNode | undefined | null }) => (
     <div className="flex justify-between py-2 border-b border-gray-200">
         <Text className="text-sm font-medium text-gray-600 m-0">{label}:</Text>
         <Text className="text-sm text-gray-800 m-0">{value || 'N/A'}</Text>
@@ -59,12 +54,6 @@ export const AppraisalEmail = ({ data }: AppraisalEmailProps) => (
         <Body className="bg-gray-50 font-sans p-4">
             <Container className="bg-white p-8 rounded-lg shadow-sm max-w-2xl mx-auto">
             <Section className="text-center">
-                <Img
-                    src={`${baseUrl}/logo.png`}
-                    width="120"
-                    alt="Trade-In Vision Logo"
-                    className="mx-auto"
-                />
                 <Heading as="h1" className="text-2xl font-bold text-gray-800 mt-4">
                     New Appraisal Request
                 </Heading>
