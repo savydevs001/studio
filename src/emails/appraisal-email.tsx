@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Section,
   Text,
@@ -24,7 +23,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     </Heading>
 );
 
-const InfoRow = ({ label, value }: { label: string; value: string | number | React.ReactNode | undefined | null }) => (
+const InfoRow = ({ label, value }: { label:string; value: string | number | React.ReactNode | undefined | null }) => (
     <div className="flex justify-between py-2 border-b border-gray-200">
         <Text className="text-sm font-medium text-gray-600 m-0">{label}:</Text>
         <Text className="text-sm text-gray-800 m-0">{value || 'N/A'}</Text>
@@ -65,8 +64,8 @@ export const AppraisalEmail = ({ data }: AppraisalEmailProps) => (
 
             <SectionTitle>Contact Information</SectionTitle>
             <InfoRow label="Name" value={data.name} />
-            <InfoRow label="Email" value={<Link href={`mailto:${data.email}`}>{data.email}</Link>} />
-            <InfoRow label="Phone" value={<Link href={`tel:${data.phone}`}>{data.phone}</Link>} />
+            <InfoRow label="Email" value={data.email} />
+            <InfoRow label="Phone" value={data.phone} />
 
             <SectionTitle>Vehicle Information</SectionTitle>
             <InfoRow label="Year" value={data.year} />
