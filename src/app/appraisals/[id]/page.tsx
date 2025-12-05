@@ -1,6 +1,8 @@
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import fs from 'fs/promises';
+import path from 'path';
 import db from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -42,9 +44,17 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
       return null;
     }
 
-    const photos: Photo[] = photoKeys.map(pk => {
-      const fileName = appraisal[pk.key]; // Get filename directly from DB
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', id);
+    let files: string[] = [];
+    try {
+        files = await fs.readdir(uploadDir);
+    } catch(e) {
+        console.log(`Could not read directory ${uploadDir}. It may not exist if no photos were uploaded.`);
+    }
 
+    const photos: Photo[] = photoKeys.map(pk => {
+      const fileName = files.find(f => f.startsWith(`${String(pk.key)}-`));
+      
       if (fileName) {
         return {
           label: pk.label,
@@ -52,8 +62,8 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
           description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
         };
       }
-      return null; // Return null if no file is found for this key
-    }).filter((p): p is Photo => p !== null); // Filter out the null entries
+      return null;
+    }).filter((p): p is Photo => p !== null);
 
 
     return { appraisal, photos };

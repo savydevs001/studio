@@ -1,3 +1,4 @@
+
 import Database from 'better-sqlite3';
 import path from 'path';
 
@@ -6,25 +7,7 @@ const dbPath = path.resolve(process.cwd(), 'appraisals.db');
 
 const db = new Database(dbPath);
 
-const photoColumns = [
-  'photoDriverFrontCorner',
-  'photoDriverQuarterPanel',
-  'photoPassengerQuarterPanel',
-  'photoFrontSeats',
-  'photoRearSeatArea',
-  'photoDashboard',
-  'photoDamage1',
-  'photoDamage2',
-  'photoDamage3',
-  'photoDamage4',
-  'photoFeature1',
-  'photoFeature2',
-  'photoFeature3',
-  'photoFeature4',
-];
-
-
-// Function to initialize the database and create/update tables
+// Function to initialize the database and create the table if it doesn't exist
 function initDb() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS appraisals (
@@ -78,22 +61,6 @@ function initDb() {
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
-
-  // Safely add columns for photo filenames if they don't exist
-  const columns = db.prepare("PRAGMA table_info(appraisals)").all();
-  const columnNames = columns.map((col: any) => col.name);
-
-  for (const col of photoColumns) {
-    if (!columnNames.includes(col)) {
-      try {
-        db.exec(`ALTER TABLE appraisals ADD COLUMN ${col} TEXT`);
-        console.log(`Added column: ${col}`);
-      } catch (e) {
-        // This might happen in a race condition but is generally safe to ignore
-        console.warn(`Could not add column ${col}, it might exist already.`);
-      }
-    }
-  }
 
   console.log('Database initialized.');
 }
