@@ -43,8 +43,9 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
     if (!appraisal) {
       return null;
     }
-
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', id);
+    
+    // Read from 'uploads' directory, not 'public/uploads'
+    const uploadDir = path.join(process.cwd(), 'uploads', id);
     let files: string[] = [];
     try {
         files = await fs.readdir(uploadDir);
@@ -53,11 +54,14 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
     }
 
     const photos: Photo[] = photoKeys.map(pk => {
-      const fileName = files.find(f => f.startsWith(`${String(pk.key)}-`));
+      // Find a file that starts with the key, e.g., "photoDamage1-"
+      const fileName = files.find(f => f.startsWith(`${pk.key}-`));
       
+      // If a matching file is found, create the photo object
       if (fileName) {
         return {
           label: pk.label,
+          // The public-facing path is still /uploads/... which will be handled by our new API route
           path: `/uploads/${id}/${fileName}`,
           description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
         };

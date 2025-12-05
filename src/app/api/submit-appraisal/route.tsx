@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
     const dbData: Record<string, any> = { id: submissionId };
 
     // Create a directory for this submission's uploads
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', submissionId);
+    // IMPORTANT: Changed from 'public/uploads' to just 'uploads'
+    const uploadDir = path.join(process.cwd(), 'uploads', submissionId);
     await fs.mkdir(uploadDir, { recursive: true });
 
     // Process form fields and files
@@ -42,16 +43,15 @@ export async function POST(request: NextRequest) {
       if (value instanceof File) {
         if (value.size > 0) {
           const fileBuffer = Buffer.from(await value.arrayBuffer());
-          // Sanitize filename and give it a unique prefix to avoid collisions
+          // Use the input field name as a predictable prefix
           const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
           const cleanFilename = value.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-          // Use the input field name as a predictable prefix
           const filename = `${key}-${uniqueSuffix}-${cleanFilename}`;
           const filePath = path.join(uploadDir, filename);
 
           await fs.writeFile(filePath, fileBuffer);
           
-          // Store the public path for email/display purposes
+          // Store the public-facing URL path for email/display purposes
           data[key] = `/uploads/${submissionId}/${filename}`;
         }
       } else {

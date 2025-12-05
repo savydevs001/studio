@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
       console.log(`No database entry found for ID: ${id}, attempting to clean up files.`);
     }
 
-    // 2. Delete the associated upload folder
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', id);
+    // 2. Delete the associated upload folder from the new location
+    const uploadDir = path.join(process.cwd(), 'uploads', id);
     try {
       await fs.rm(uploadDir, { recursive: true, force: true });
     } catch (fsError) {
