@@ -17,27 +17,12 @@ interface Photo {
 }
 
 const photoKeys: { key: keyof Appraisal; label: string, descriptionKey?: keyof Appraisal }[] = [
-    { key: 'photoOdometer', label: 'Odometer' },
-    { key: 'photoVin', label: 'VIN Sticker' },
     { key: 'photoDriverFrontCorner', label: 'Front of Vehicle' },
-    { key: 'photoPassengerRearCorner', label: 'Rear of Vehicle' },
     { key: 'photoDriverQuarterPanel', label: 'Driver Side' },
     { key: 'photoPassengerQuarterPanel', label: 'Passenger Side' },
-    { key: 'photoDriverRearWheel', label: 'Tire Tread' },
-    { key: 'photoDashboard', label: 'Dashboard' },
     { key: 'photoFrontSeats', label: 'Front Seats' },
     { key: 'photoRearSeatArea', label: 'Rear Seats' },
-    { key: 'photoInteriorRoof', label: 'Interior Roof' },
-    { key: 'photoDriverFrontDoor', label: 'Driver Door Interior' },
-    { key: 'photoTrunkArea', label: 'Trunk' },
-    { key: 'photoDriverApron', label: 'Driver Engine Apron' },
-    { key: 'photoPassengerApron', label: 'Passenger Engine Apron' },
-    { key: 'photoDamage1', label: 'Damage 1', descriptionKey: 'photoDamage1Description' },
-    { key: 'photoDamage2', label: 'Damage 2', descriptionKey: 'photoDamage2Description' },
-    { key: 'photoDamage3', label: 'Damage 3', descriptionKey: 'photoDamage3Description' },
-    { key: 'photoFeature1', label: 'Feature 1', descriptionKey: 'photoFeature1Description' },
-    { key: 'photoFeature2', label: 'Feature 2', descriptionKey: 'photoFeature2Description' },
-    { key: 'photoFeature3', label: 'Feature 3', descriptionKey: 'photoFeature3Description' },
+    { key: 'photoDashboard', label: 'Dashboard' },
 ];
 
 async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos: Photo[] } | null> {

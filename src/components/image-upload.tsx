@@ -103,6 +103,7 @@ export default function ImageUpload({ name, label, icon, exampleImageUrl, imageH
                     id={name}
                     type="file"
                     accept="image/png, image/jpeg, image/webp"
+                    capture="environment"
                     className="sr-only"
                     onChange={(e) => onChange(e.target.files)}
                   />

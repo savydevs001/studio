@@ -12,15 +12,6 @@ const requiredImageSchema = fileListSchema
     'Only .jpg, .jpeg, .png and .webp formats are supported.'
   );
 
-const optionalImageSchema = fileListSchema
-  .optional()
-  .nullable()
-  .refine((files) => !files || files.length === 0 || files?.[0]?.size <= 5 * 1024 * 1024, `Max file size is 5MB.`)
-  .refine(
-    (files) => !files || files.length === 0 || ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(files?.[0]?.type),
-    'Only .jpg, .jpeg, .png and .webp formats are supported.'
-  );
-
 export const appraisalSchema = z.object({
   // Step 1: Vehicle Info
   vin: z.string().min(11, 'VIN must be 11-17 characters').max(17, 'VIN must be 11-17 characters'),
@@ -73,37 +64,12 @@ export const appraisalSchema = z.object({
   otherIssuesDetails: z.string().optional(),
   
   // Step 4: Photos (Required)
-  photoOdometer: requiredImageSchema,
-  photoVin: requiredImageSchema,
-  photoFrontSeats: requiredImageSchema,
-  photoInteriorRoof: requiredImageSchema,
-  photoDriverFrontDoor: requiredImageSchema,
-  photoDriverApron: requiredImageSchema,
-  photoPassengerApron: requiredImageSchema,
   photoDriverFrontCorner: requiredImageSchema,
+  photoDriverQuarterPanel: requiredImageSchema,
+  photoPassengerQuarterPanel: requiredImageSchema,
+  photoFrontSeats: requiredImageSchema,
   photoRearSeatArea: requiredImageSchema,
   photoDashboard: requiredImageSchema,
-  photoPassengerRearCorner: requiredImageSchema,
-  photoTrunkArea: requiredImageSchema,
-  photoPassengerQuarterPanel: requiredImageSchema,
-  photoDriverQuarterPanel: requiredImageSchema,
-  photoDriverRearWheel: requiredImageSchema,
-
-  // Step 4: Photos (Optional Damages)
-  photoDamage1: optionalImageSchema,
-  photoDamage1Description: z.string().optional(),
-  photoDamage2: optionalImageSchema,
-  photoDamage2Description: z.string().optional(),
-  photoDamage3: optionalImageSchema,
-  photoDamage3Description: z.string().optional(),
-
-  // Step 4: Photos (Optional Features)
-  photoFeature1: optionalImageSchema,
-  photoFeature1Description: z.string().optional(),
-  photoFeature2: optionalImageSchema,
-  photoFeature2Description: z.string().optional(),
-  photoFeature3: optionalImageSchema,
-  photoFeature3Description: z.string().optional(),
 
   // Step 5: Contact Info
   name: z.string().min(2, 'Name is required'),
@@ -148,24 +114,6 @@ export const appraisalSchema = z.object({
     }
     if (data.otherIssues === 'yes' && !data.otherIssuesDetails) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Details are required', path: ['otherIssuesDetails'] });
-    }
-    if (data.photoDamage1 && !data.photoDamage1Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoDamage1Description'] });
-    }
-    if (data.photoDamage2 && !data.photoDamage2Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoDamage2Description'] });
-    }
-    if (data.photoDamage3 && !data.photoDamage3Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoDamage3Description'] });
-    }
-    if (data.photoFeature1 && !data.photoFeature1Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoFeature1Description'] });
-    }
-    if (data.photoFeature2 && !data.photoFeature2Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoFeature2Description'] });
-    }
-    if (data.photoFeature3 && !data.photoFeature3Description) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Description is required', path: ['photoFeature3Description'] });
     }
 });
 
