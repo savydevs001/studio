@@ -1,12 +1,15 @@
-import type {NextConfig} from 'next';
 
-const appHostname = process.env.NEXT_PUBLIC_APP_URL
-  ? new URL(process.env.NEXT_PUBLIC_APP_URL).hostname
-  : undefined;
+import type {NextConfig} from 'next';
 
 const remotePatterns: NextConfig['images']['remotePatterns'] = [
   {
     protocol: 'http',
+    hostname: 'mike.bilalgul.dpdns.org',
+    port: '',
+    pathname: '/**',
+  },
+  {
+    protocol: 'https',
     hostname: 'mike.bilalgul.dpdns.org',
     port: '',
     pathname: '/**',
@@ -30,21 +33,6 @@ const remotePatterns: NextConfig['images']['remotePatterns'] = [
     pathname: '/**',
   },
 ];
-
-if (appHostname) {
-  remotePatterns.push({
-    protocol: 'http',
-    hostname: appHostname,
-    port: '',
-    pathname: '/**',
-  });
-  remotePatterns.push({
-    protocol: 'https',
-    hostname: appHostname,
-    port: '',
-    pathname: '/**',
-  });
-}
 
 
 const nextConfig: NextConfig = {
