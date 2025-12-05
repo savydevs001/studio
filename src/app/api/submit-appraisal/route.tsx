@@ -6,13 +6,7 @@ import { AppraisalEmail } from '@/emails/appraisal-email';
 import type { AppraisalFormValues } from '@/lib/schema';
 
 // Increase the body size limit for this route to handle large image uploads
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '100mb',
-    },
-  },
-};
+export const maxRequestBodySize = '100mb';
 
 // Helper to convert a file to a Base64 string for email attachments
 async function fileToBase64(file: File): Promise<string> {
