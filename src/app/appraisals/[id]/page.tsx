@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import path from 'path';
-import fs from 'fs/promises';
 import db from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -16,6 +14,7 @@ interface Photo {
   description?: string;
 }
 
+// These keys now match the database columns for photo filenames
 const photoKeys: { key: keyof Appraisal; label: string, descriptionKey?: keyof Appraisal }[] = [
     { key: 'photoDriverFrontCorner', label: 'Front of Vehicle' },
     { key: 'photoDriverQuarterPanel', label: 'Driver Side' },
@@ -41,28 +40,17 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
     if (!appraisal) {
       return null;
     }
-    
-    // This is a workaround since we aren't storing file names in the DB
-    // We can list the directory to find the actual files.
-    const submissionDir = path.join(process.cwd(), 'public', 'uploads', id);
-    let files: string[] = [];
-    try {
-        files = await fs.readdir(submissionDir);
-    } catch (error) {
-        console.warn(`Could not read directory for submission ${id}. It may have been deleted.`);
-    }
 
-
+    // Now, we construct photo paths directly from the database record
     const photosWithRealPaths: Photo[] = photoKeys.map(pk => {
-      // The filename in the form is `photoOdometer-image.jpeg` but `pk.key` is just `photoOdometer`
-      // We find a file that starts with the key followed by a hyphen to ensure an exact match.
-      const fileName = files.find(f => f.startsWith(`${String(pk.key)}-`));
+      const fileName = appraisal[pk.key]; // Get filename from DB
       return {
         label: pk.label,
+        // Only create a path if a filename exists for that key
         path: fileName ? `/uploads/${id}/${fileName}` : undefined,
         description: pk.descriptionKey ? appraisal[pk.descriptionKey] : undefined,
       }
-    }).filter((p): p is Photo => !!p.path);
+    }).filter((p): p is Photo => !!p.path); // Filter out entries that don't have a path
 
 
     return { appraisal, photos: photosWithRealPaths };
@@ -199,19 +187,20 @@ export default async function AppraisalPage({ params }: { params: { id: string }
 
           <section>
             <h2 className="text-2xl font-semibold border-b pb-2 mb-4">Submitted Photos</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {photos.map(photo => (
-                <PhotoCard key={photo.label} photo={photo} />
-              ))}
-            </div>
-            {photos.length === 0 && (
-                <Alert variant="default">
-                    <FileWarning className="h-4 w-4" />
-                    <AlertTitle>No Photos Found</AlertTitle>
-                    <AlertDescription>
-                        The photos for this submission could not be found. They may have been deleted from the server.
-                    </AlertDescription>
-                </Alert>
+            {photos.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {photos.map(photo => (
+                  <PhotoCard key={photo.label} photo={photo} />
+                ))}
+              </div>
+            ) : (
+              <Alert variant="default">
+                  <FileWarning className="h-4 w-4" />
+                  <AlertTitle>No Photos Found</AlertTitle>
+                  <AlertDescription>
+                      No photos were submitted for this appraisal, or they could not be found on the server.
+                  </AlertDescription>
+              </Alert>
             )}
           </section>
         </CardContent>

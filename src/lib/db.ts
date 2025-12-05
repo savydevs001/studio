@@ -50,13 +50,28 @@ function initDb() {
       otherIssues TEXT,
       otherIssuesDetails TEXT,
       
+      photoDriverFrontCorner TEXT,
+      photoDriverQuarterPanel TEXT,
+      photoPassengerQuarterPanel TEXT,
+      photoFrontSeats TEXT,
+      photoRearSeatArea TEXT,
+      photoDashboard TEXT,
+
+      photoDamage1 TEXT,
       photoDamage1Description TEXT,
+      photoDamage2 TEXT,
       photoDamage2Description TEXT,
+      photoDamage3 TEXT,
       photoDamage3Description TEXT,
+      photoDamage4 TEXT,
       photoDamage4Description TEXT,
+      photoFeature1 TEXT,
       photoFeature1Description TEXT,
+      photoFeature2 TEXT,
       photoFeature2Description TEXT,
+      photoFeature3 TEXT,
       photoFeature3Description TEXT,
+      photoFeature4 TEXT,
       photoFeature4Description TEXT,
       
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP

@@ -45,11 +45,13 @@ export async function POST(request: NextRequest) {
           // Sanitize filename and give it a unique prefix to avoid collisions
           const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
           const cleanFilename = value.name.replace(/[^a-zA-Z0-9.\-]/g, '_');
-          const filename = `${key}-${uniqueSuffix}-${cleanFilename}`;
+          const filename = `${uniqueSuffix}-${cleanFilename}`;
           const filePath = path.join(uploadDir, filename);
 
           await fs.writeFile(filePath, fileBuffer);
-          // We don't need to store the path in memory anymore
+          
+          // Store the filename in our data object for the database
+          data[key] = filename;
         }
       } else {
         data[key] = value;
