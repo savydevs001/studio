@@ -33,13 +33,13 @@
     {
       "id": "driver-quarter-panel",
       "description": "A photo of the entire driver's side of the vehicle.",
-      "imageUrl": "/DriverQuarterPanel-e8963eb0.jpg",
+      "imageUrl": "/DriverSide.jpg",
       "imageHint": "car side"
     },
     {
       "id": "passenger-quarter-panel",
       "description": "A photo of the entire passenger's side of the vehicle.",
-      "imageUrl": "/PassengerQuarterPanel-346ac7e4.jpg",
+      "imageUrl": "/RiderSide.jpg",
       "imageHint": "car side"
     },
     {
