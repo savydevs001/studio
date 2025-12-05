@@ -62,8 +62,8 @@ async function getAppraisal(id: string): Promise<{ appraisal: Appraisal, photos:
 
     const photosWithRealPaths: Photo[] = photoKeys.map(pk => {
       // The filename in the form is `photoOdometer-image.jpeg` but `pk.key` is just `photoOdometer`
-      // So we find a file that starts with the key.
-      const fileName = files.find(f => f.startsWith(String(pk.key)));
+      // We find a file that starts with the key followed by a hyphen to ensure an exact match.
+      const fileName = files.find(f => f.startsWith(`${String(pk.key)}-`));
       return {
         label: pk.label,
         path: fileName ? `/uploads/${id}/${fileName}` : undefined,
