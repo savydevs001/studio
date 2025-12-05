@@ -7,6 +7,25 @@ const dbPath = path.resolve(process.cwd(), 'appraisals.db');
 
 const db = new Database(dbPath);
 
+// Function to add a column to a table if it doesn't exist
+function addColumnIfNotExists(table: string, column: string, type: string) {
+  try {
+    // Check if the column exists
+    const result = db.prepare(`PRAGMA table_info(${table})`).all();
+    const columnExists = result.some((col: any) => col.name === column);
+
+    if (!columnExists) {
+      db.prepare(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`).run();
+      console.log(`Column '${column}' added to table '${table}'.`);
+    }
+  } catch (error) {
+    // This can happen if another process is initializing at the same time.
+    // It's generally safe to ignore if the column check is robust.
+    console.warn(`Could not add column ${column} to ${table}, it might already exist.`);
+  }
+}
+
+
 // Function to initialize the database and create the table if it doesn't exist
 function initDb() {
   db.exec(`
@@ -53,14 +72,17 @@ function initDb() {
       photoDamage1Description TEXT,
       photoDamage2Description TEXT,
       photoDamage3Description TEXT,
-      photoDamage4Description TEXT,
       photoFeature1Description TEXT,
       photoFeature2Description TEXT,
       photoFeature3Description TEXT,
-      photoFeature4Description TEXT,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+  
+  // Add columns for the 4th optional photos, which might be missing from older schemas
+  addColumnIfNotExists('appraisals', 'photoDamage4Description', 'TEXT');
+  addColumnIfNotExists('appraisals', 'photoFeature4Description', 'TEXT');
+
 
   console.log('Database initialized.');
 }
