@@ -32,7 +32,7 @@ export const appraisalSchema = z.object({
 
   // Step 2: Vehicle Details
   transmission: z.enum(['Automatic', 'Manual'], { required_error: 'This field is required' }),
-  drivetrain: z.enum(['Front-Wheel Drive', 'Rear-Wheel Drive', 'All-Wheel Drive', '4-Wheel Drive'], { required_error: 'This field is required' }),
+  drivetrain: z.enum(['2-Wheel Drive', '4-Wheel Drive', 'All-Wheel Drive'], { required_error: 'This field is required' }),
 
   // Step 3: Condition
   // History

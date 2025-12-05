@@ -57,10 +57,9 @@ export default function VehicleDetailsStep() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Front-Wheel Drive">Front-Wheel Drive</SelectItem>
-                  <SelectItem value="Rear-Wheel Drive">Rear-Wheel Drive</SelectItem>
-                  <SelectItem value="All-Wheel Drive">All-Wheel Drive</SelectItem>
+                  <SelectItem value="2-Wheel Drive">2-Wheel Drive</SelectItem>
                   <SelectItem value="4-Wheel Drive">4-Wheel Drive</SelectItem>
+                  <SelectItem value="All-Wheel Drive">All-Wheel Drive</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
