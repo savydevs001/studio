@@ -87,7 +87,7 @@ export default function PhotosStep() {
               label={upload.label}
               icon={<Wrench className="h-8 w-8" />}
               descriptionName={upload.descriptionName}
-              description={`Describe this area of damage`}
+              description={``}
             />
           ))}
         </div>
@@ -108,7 +108,7 @@ export default function PhotosStep() {
               label={upload.label}
               icon={<Sparkles className="h-8 w-8" />}
               descriptionName={upload.descriptionName}
-              description={`Describe this feature`}
+              description={``}
             />
           ))}
         </div>
