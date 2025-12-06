@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 const fileListSchema = typeof window === 'undefined'
@@ -6,7 +7,7 @@ const fileListSchema = typeof window === 'undefined'
 
 const requiredImageSchema = fileListSchema
   .refine((files) => files && files.length === 1, 'Image is required.')
-  .refine((files) => files?.[0]?.size <= 5 * 1024 * 1024, `Max file size is 5MB.`)
+  .refine((files) => files?.[0]?.size <= 10 * 1024 * 1024, `Max file size is 10MB.`)
   .refine(
     (files) => ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(files?.[0]?.type),
     'Only .jpg, .jpeg, .png and .webp formats are supported.'
@@ -14,7 +15,7 @@ const requiredImageSchema = fileListSchema
 
 const optionalImageSchema = fileListSchema
   .optional()
-  .refine((files) => !files || files.length === 0 || files[0].size <= 5 * 1024 * 1024, `Max file size is 5MB.`)
+  .refine((files) => !files || files.length === 0 || files[0].size <= 10 * 1024 * 1024, `Max file size is 10MB.`)
   .refine(
     (files) => !files || files.length === 0 || ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(files[0].type),
     'Only .jpg, .jpeg, .png and .webp formats are supported.'
@@ -147,3 +148,5 @@ export const appraisalSchema = z.object({
 
 
 export type AppraisalFormValues = z.infer<typeof appraisalSchema>;
+
+    
